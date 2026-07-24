@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<!-- saved from url=(0253)https://bcc4842c-8551-444c-8c1a-7a35495e1a21.frame.claudeusercontent.com/_f/1784866001-63e9/?__frame_t=_QryJRHlucmYtcBbfFPrW_Sf.74edd0b5-cbe1-4251-bcf3-64d7b5eb86f3.88802169-cb0b-4822-930d-6d7e5997e0f1.1784869631&__frame_v=manifest.77e7b55ea2d42ff9.json -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!-- frame-runtime --><!--<base href="/_f/1784866001-63e9/">--><base href="."><script>window.__FRAME_PREAMBLE={"capabilities":{"downloads":"downloads.BABDwU1K.js","mcp":"mcp.hoz5jxDa.js","permissions":"permissions.ByA9Fd8x.js","self":"self.D3u1zjZe.js","user":"user.Cp1-RnjB.js"},"transforms":"_transforms.DYk1Ltlh.js","comments":"_comments.DiwQajF_.js","translate":"_translate.C5leZL2A.js"}</script><script>(function(){"use strict";const we="modulepreload",Oe=function(e){return"/"+e},Se={},ee=function(t,n,c){let i=Promise.resolve();function s(f){const a=new Event("vite:preloadError",{cancelable:!0});if(a.payload=f,window.dispatchEvent(a),!a.defaultPrevented)throw f}return i.then(f=>{for(const a of f||[])a.status==="rejected"&&s(a.reason);return t().catch(s)})},te=["light","dark","system"];function ne(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_init;return t!==null&&typeof t=="object"}function Y(e){return e!==null&&typeof e=="object"&&e.__frame_size_poke===!0}function re(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_theme;if(t===null||typeof t!="object")return!1;const n=t.theme;return typeof n=="string"&&te.includes(n)}function se(e){try{typeof reportError=="function"?reportError(e):setTimeout(()=>{throw e},0)}catch{}}const oe=Object.freeze(Object.assign(Object.create(null),{user:Object.freeze(Object.assign(Object.create(null),{id:null,isOwner:!1,canEdit:!1,name:null,avatarUrl:null,email:null}))})),ie={};function K(e){if(window===top||e.type==="auxclick"&&e.button!==1)return;const t=e.composedPath?e.composedPath():[e.target];let n=null;for(let f=0;f<t.length;f++){const a=t[f];if(a&&a.matches&&a.matches("a[href],area[href]")){n=a;break}}if(!n&&e.target&&e.target.closest&&(n=e.target.closest("a[href],area[href]")),!n)return;const c=n.getAttribute("href");if(!c)return;let i,s;try{i=new URL(c,document.baseURI),s=new URL(document.baseURI).origin}catch{return}(i.protocol==="http:"||i.protocol==="https:")&&i.origin!==s&&(e.preventDefault(),parent.postMessage({__frame_nav:!0,url:i.href},"*"))}const x={};function I(e){if(window===top)return;const t=Date.now();t-(x[e]||0)<500||(x[e]=t,parent.postMessage({__frame_engaged:!0,kind:e},"*"))}const ae=2e3,J=["wheel","touchstart","touchmove","keydown","pointerdown"];let G=0;function ce(e){e.isTrusted&&(G=Date.now())}function le(){addEventListener("click",K,!0),addEventListener("auxclick",K,!0)}function ue(){for(let e=0;e<J.length;e++)addEventListener(J[e],ce,{capture:!0,passive:!0});addEventListener("scroll",e=>{e.isTrusted&&Date.now()-G<ae&&I("scroll")},{capture:!0,passive:!0}),addEventListener("pointermove",e=>{e.isTrusted&&I("pointer")},{capture:!0,passive:!0}),addEventListener("click",e=>{e.isTrusted&&I("click")},{capture:!0,passive:!0})}const U="__frame_scroll",fe=150,de=310,pe=160,me=3e4;function he(){let e=0,t=!1,n=!1,c=!1,i=0;const s=p=>{try{sessionStorage.setItem(U,JSON.stringify({y:p}))}catch{}},f=()=>{if(t){t=!1;return}n=!0,clearTimeout(e),e=setTimeout(()=>s(scrollY),fe)};try{addEventListener("scroll",f,{passive:!0}),addEventListener("pagehide",()=>{clearTimeout(e),s(scrollY)})}catch{}const a=()=>{let p;try{p=sessionStorage.getItem(U)}catch{return null}if(p===null)return null;let b;try{b=JSON.parse(p)}catch{b=null}const l=b?.y;if(!(typeof l=="number"&&Number.isFinite(l)&&l>=0)){try{sessionStorage.removeItem(U)}catch{}return null}return l};let _=!1;const h=p=>{try{const b=scrollY;scrollTo({top:p,left:0,behavior:"instant"}),i=p,c=!0,s(p);const l=scrollY;l!==b&&(t=!0),l!==p&&!_&&(_=!0,addEventListener("load",()=>{try{if(scrollY===l){const g=a();h(g!==null?g:i)}}catch{}},{once:!0}))}catch{}},o=()=>{try{return!!location.hash}catch{return!0}};let u=!1;const d=()=>{try{if(u||innerWidth>de||innerHeight>pe)return;u=!0;const p=Date.now(),b=()=>{try{removeEventListener("resize",b)}catch{}if(Date.now()-p>me||n||o())return;const l=a();h(l!==null?l:i)};addEventListener("resize",b)}catch{}};let m=!1,y=!1;return{restore(){if(m||(m=!0,o()))return;const p=a();p!==null&&(h(p),d())},promoted(){if(y||(y=!0,o()))return;const p=a();p!==null?(h(p),d()):c&&h(i)}}}function ge(e,t,n){const c=[...t.values()].filter(i=>i.targets.some(s=>s.startsWith(e+".")));return{wrap(i,s){const f=`${e}.${i}`,a=c.filter(_=>_.targets.includes(f));return a.length===0?(..._)=>{try{return s(..._)}catch(h){return Promise.reject(h)}}:(..._)=>{let h=_;for(const u of a){const d=u.module.parameters;if(d)try{h=d(h)}catch{return Promise.reject({code:"transform_error",id:u.id,scope:e,message:"parameters transform failed"})}}let o;try{o=s(...h)}catch(u){o=Promise.reject(u)}return o.then(u=>{for(let d=a.length-1;d>=0;d--){const m=a[d],y=m.module.returns;if(y)try{u=y(u)}catch{return n({id:m.id,scope:e,leg:"returns"}),u}}return u},u=>{for(let d=a.length-1;d>=0;d--){const m=a[d],y=m.module.throws;if(y)try{u=y(u)}catch{return n({id:m.id,scope:e,leg:"throws"}),Promise.reject(u)}}return Promise.reject(u)})}}}}function _e(e,t,n,c=()=>{}){const i=new Set(e.changes??[]),s=new Map;for(const f of i){const a=t[f];a&&s.set(f,a)}return{contract:e.contract,changes:i,flags:new Set(e.flags??[]),capabilities:e.capabilities??{},capBudgets:e.capBudgets??{},transforms:s,shellOrigin:n.shellOrigin,mount:n.mount,pipe:f=>ge(f,s,c)}}(function(){const e=Object.defineProperty,t=globalThis,n=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let c=0;for(let i=0;i<n.length;i++){const s=n[i];try{e(t,s,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[s]}catch{}try{e(t,s,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[s]=="function"&&c++}if(c&&window!==top)try{parent.postMessage({__frame_rtc_lockdown_failed:c},"*")}catch{}})();const ye=1e4,be=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function V(e){for(const t of be)if(t.endsWith(":*"))try{const n=new URL(e);if(`${n.protocol}//${n.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}const T=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),z=window.__FRAME_PREAMBLE?.transforms,q=window.__FRAME_PREAMBLE?.comments,$=window.__FRAME_PREAMBLE?.translate,C=/^[\w.-]+\.js$/,ve=/^[a-z][a-z0-9_-]{0,63}$/;let X=null,P=null;function B(e,t,n){try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!0,enumerable:!0})}catch{}}}let F=!1;function Q(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,F=!0):F&&(delete t.dataset.theme,t.style.colorScheme="",F=!1)}const M=Object.assign(Object.create(null),{mcp:Object.assign(Object.create(null),{watchTool:{handlerArg:3}})}),R=new Map;function Z(e,t){const n=R.get(e);if(!n)return;const c=Object.assign(Object.create(null),t);Object.assign(n.impl,c),n.impl.__settled=()=>Promise.reject({code:"capability_removed",message:`${e}: method not in this runtime`});const i=n.queue;n.queue=[];for(const s of i){const f=c[s.method];if(f)if(M[e]?.[s.method])try{s.resolve(f(...s.args))}catch{k(s,M[e][s.method].handlerArg,{code:"transform_error",message:`${e}.${s.method} rejected its arguments`})}else f(...s.args).then(s.resolve,s.reject);else{const a={code:"capability_removed",message:`${e}.${s.method} is not in this runtime`},_=M[e]?.[s.method];if(_){k(s,_.handlerArg,a);continue}s.reject(a)}}}function Ee(e,t){const n=R.get(e);if(!n)return;n.impl.__settled=()=>Promise.reject(t);const c=n.queue;n.queue=[];for(const i of c){const s=M[e]?.[i.method];if(s){k(i,s.handlerArg,t);continue}i.reject(t)}}function N(e,t){const n=oe[e];if(!n){Ee(e,t);return}Z(e,Object.fromEntries(Object.entries(n).map(([c,i])=>[c,()=>Promise.resolve(i)])))}function k(e,t,n){if(e.syncState?.dead)return;const c=e.args[t];typeof c=="function"&&queueMicrotask(()=>{if(!e.syncState?.dead)try{c({type:"error",error:n})}catch(i){se(i)}})}const H=Object.getOwnPropertyDescriptor(window,"claude");if(window!==top&&!(H&&H.writable===!1)){le(),ue();let e=null;try{e=he()}catch{}const t=H?.value??{};B(window,"claude",t);const n=o=>{const u={impl:Object.create(null),queue:[]};R.set(o,u);const d=u.impl,m=ie[o],y=m===void 0?d:()=>{},p=new Proxy(y,{apply:(b,l,g)=>{const v=m,O=d[v]??d.__settled;return O?O(...g):new Promise((E,w)=>{u.queue.push({method:v,args:g,resolve:E,reject:w})})},get:(b,l)=>{if(typeof l!="string"||l==="then"||l==="toJSON"||l==="valueOf")return;if(l==="toString")return Object.prototype.toString;if(m!==void 0&&(l==="call"||l==="apply"||l==="bind"))return Function.prototype[l];const g=M[o]?.[l];return g?(...v)=>{if(typeof v[g.handlerArg]!="function")throw new TypeError(`${o}.${l} requires a handler function`);const O=d[l];if(O)return O(...v);if(d.__settled){const S={dead:!1},A={args:[...v],syncState:S};return d.__settled().catch(D=>k(A,g.handlerArg,D)),()=>{S.dead=!0}}let E=null;const w={dead:!1};return u.queue.push({method:l,args:v,resolve:S=>{E=typeof S=="function"?S:null,w.dead&&E?.()},reject:()=>{},syncState:w}),()=>{w.dead=!0,E?.()}}:(...v)=>{const O=d[l]??d.__settled;return O?O(...v):new Promise((E,w)=>{u.queue.push({method:l,args:v,resolve:E,reject:w})})}},set:()=>!1});B(t,o,p)};for(const o of Object.keys(T)){if(t[o]!==void 0){B(t,o,t[o]);continue}n(o)}let c=null,i=null,s=0;const f=o=>{o.source!==parent||!V(o.origin)||ne(o.data)&&(c=o.data.__frame_init,P=o.origin,removeEventListener("message",f),clearTimeout(s),i?.())};addEventListener("message",f),parent.postMessage({__frame_connect:!0},"*");const a=new Promise(o=>{i=o,s=setTimeout(()=>{removeEventListener("message",f),o()},ye)}),_=document.readyState==="loading"?new Promise(o=>document.addEventListener("DOMContentLoaded",()=>o(),{once:!0})):Promise.resolve();_.then(()=>{try{e?.restore()}catch{}});const h=o=>{if(!(o.source!==parent||!V(o.origin))&&Y(o.data)){removeEventListener("message",h);try{e?.promoted()}catch{}}};addEventListener("message",h),a.then(async()=>{if(!c||!P){for(const r of R.keys())N(r,{code:"not_granted",message:"frame initialization did not arrive - capability unavailable"});return}Q(c.theme);const o=P;let u=!1,d=!1;addEventListener("message",r=>{if(r.source!==parent||r.origin!==o)return;re(r.data)&&Q(r.data.__frame_theme.theme);const j=r.data?.__fc_mode;j&&typeof j=="object"&&!u&&q&&C.test(q)&&(u=!0,m(q).then(W=>W.install?.(o,j.on===!0)).catch(()=>{}));const L=r.data?.__ft_cmd;L&&typeof L=="object"&&!d&&$&&C.test($)&&(d=!0,m($).then(W=>W.install?.(o,L)).catch(()=>{}))});const m=r=>ee(()=>import("/_runtime/"+r),void 0),y=Object.keys(c.capabilities??{});for(const r of y)Object.hasOwn(T,r)||ve.test(r)&&t[r]===void 0&&(n(r),N(r,{code:"capability_disabled",message:"capability not in this runtime generation"}));const p=y.filter(r=>Object.hasOwn(T,r)).map(r=>[r,T[r]]).filter(r=>typeof r[1]=="string"&&C.test(r[1])),[b,...l]=await Promise.allSettled([z&&C.test(z)?m(z):Promise.resolve({}),...p.map(([,r])=>m(r))]),g=P;X=_e(c,b.status==="fulfilled"&&b.value?.TRANSFORMS||{},{shellOrigin:g,mount:Z},r=>parent.postMessage({__frame_cap_telemetry:r},g));const v=r=>parent.postMessage({__frame_cap_telemetry:{kind:"cap-load-error",cap:r}},g),O=X;l.forEach((r,j)=>{const L=p[j][0];if(r.status!=="fulfilled"){v(L);return}try{r.value?.install?.(O)}catch{v(L)}});for(const[r,j]of R)if(!(j.queue.length===0&&Object.keys(j.impl).length>0)){if(y.includes(r)){N(r,{code:"capability_disabled",message:"capability not available in this session"});continue}N(r,{code:"not_granted",message:"capability not available in this session"})}await _,parent.postMessage({__frame_ready:!0},P);let E=-1,w=0;const S=()=>{w=0;const r=Math.max(document.documentElement.scrollHeight,document.body?document.body.scrollHeight:0);r!==E&&(E=r,parent.postMessage({__frame_size:!0,h:r},g))},A=()=>{w||(w=setTimeout(S,200))},D=new ResizeObserver(A);D.observe(document.documentElement),document.body&&D.observe(document.body),document.addEventListener("load",A,!0),document.fonts?.ready.then(A,()=>{}),addEventListener("beforeprint",()=>{E=-1,S()}),A(),addEventListener("message",r=>{if(!(r.source!==parent||r.origin!==g)&&Y(r.data)){try{e?.promoted()}catch{}E=-1,A()}})})}})();</script><!-- /frame-runtime --><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>ACH Data · Hallazgos de segmentación y modelado</title>
+<style>
+  :root{
+    --paper:#F3F5F3; --surface:#FFFFFF; --surface-2:#EDF0EE;
+    --ink:#15201E; --muted:#5B6A67; --faint:#8A9995;
+    --line:#DCE2DE; --line-strong:#C4CDC8;
+    --accent:#0B8188; --accent-deep:#0A5F64; --accent-soft:#D3E7E6;
+    --indigo:#33507E; --good:#2E7D4F; --risk:#B23A48; --warn:#B4771E;
+    --shadow:0 1px 2px rgba(20,32,30,.04),0 12px 32px rgba(20,32,30,.06);
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0D1413; --surface:#141D1B; --surface-2:#1B2624;
+      --ink:#EAF0EE; --muted:#94A39F; --faint:#6E7C79;
+      --line:#243230; --line-strong:#334340;
+      --accent:#3BB0B7; --accent-deep:#5FC7CD; --accent-soft:#123736;
+      --indigo:#7C9AD1; --good:#54B482; --risk:#E27b8a; --warn:#D89A44;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.34);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#F3F5F3; --surface:#FFFFFF; --surface-2:#EDF0EE;
+    --ink:#15201E; --muted:#5B6A67; --faint:#8A9995; --line:#DCE2DE; --line-strong:#C4CDC8;
+    --accent:#0B8188; --accent-deep:#0A5F64; --accent-soft:#D3E7E6;
+    --indigo:#33507E; --good:#2E7D4F; --risk:#B23A48; --warn:#B4771E;
+    --shadow:0 1px 2px rgba(20,32,30,.04),0 12px 32px rgba(20,32,30,.06);
+  }
+  :root[data-theme="dark"]{
+    --paper:#0D1413; --surface:#141D1B; --surface-2:#1B2624;
+    --ink:#EAF0EE; --muted:#94A39F; --faint:#6E7C79; --line:#243230; --line-strong:#334340;
+    --accent:#3BB0B7; --accent-deep:#5FC7CD; --accent-soft:#123736;
+    --indigo:#7C9AD1; --good:#54B482; --risk:#E27B8A; --warn:#D89A44;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.34);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--font-sans);line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .deck{scroll-snap-type:y proximity;}
+  .slide{
+    min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;
+    padding:clamp(28px,5vh,64px) clamp(20px,5vw,72px);scroll-snap-align:start;
+    border-bottom:1px solid var(--line);
+  }
+  .frame{width:100%;max-width:1080px;}
+  /* eyebrow / kicker */
+  .eyebrow{
+    font-family:var(--font-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);display:flex;gap:12px;align-items:center;margin:0 0 18px;
+  }
+  .eyebrow .num{color:var(--faint)}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--accent);display:inline-block}
+  h1{font-size:clamp(34px,6.2vw,68px);line-height:1.02;letter-spacing:-.03em;font-weight:800;margin:.1em 0 .3em;text-wrap:balance}
+  h2{font-size:clamp(26px,3.6vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:750;margin:0 0 .5em;text-wrap:balance}
+  h3{font-size:15px;font-weight:700;margin:0 0 .4em;letter-spacing:-.01em}
+  p{margin:0 0 1em;color:var(--muted);max-width:64ch}
+  p.lead{font-size:clamp(17px,1.7vw,21px);color:var(--ink);max-width:60ch}
+  strong{color:var(--ink);font-weight:680}
+  .mono{font-family:var(--font-mono)}
+  /* layout helpers */
+  .cols{display:grid;gap:clamp(20px,3vw,44px)}
+  .c2{grid-template-columns:1fr 1fr}
+  .c5-7{grid-template-columns:5fr 7fr}
+  .c7-5{grid-template-columns:7fr 5fr}
+  @media(max-width:760px){.c2,.c5-7,.c7-5{grid-template-columns:1fr}}
+  .stack{display:flex;flex-direction:column;gap:18px}
+  /* cards */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 22px;box-shadow:var(--shadow)}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 16px}
+  .tile .big{font-family:var(--font-mono);font-size:clamp(26px,3.4vw,38px);font-weight:680;letter-spacing:-.02em;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+  .tile .lbl{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.35}
+  .tile.accent .big{color:var(--accent)} .tile.good .big{color:var(--good)}
+  .tile.risk .big{color:var(--risk)} .tile.warn .big{color:var(--warn)}
+  /* bar chart */
+  .bars{display:flex;flex-direction:column;gap:11px}
+  .bar-row{display:grid;grid-template-columns:minmax(120px,190px) 1fr auto;gap:14px;align-items:center}
+  .bar-label{font-size:13.5px;color:var(--ink);line-height:1.2}
+  .bar-track{height:16px;background:var(--surface-2);border-radius:5px;overflow:hidden}
+  .bar-fill{height:100%;background:var(--accent);border-radius:5px;min-width:3px}
+  .bar-fill.good{background:var(--good)} .bar-fill.risk{background:var(--risk)}
+  .bar-fill.warn{background:var(--warn)} .bar-fill.indigo{background:var(--indigo)}
+  .bar-fill.soft{background:var(--line-strong)}
+  .bar-val{font-family:var(--font-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  @media(max-width:760px){.bar-row{grid-template-columns:minmax(96px,1fr) 1.4fr auto;gap:9px}.bar-label{font-size:12px}}
+  /* data table */
+  table{border-collapse:collapse;width:100%;font-size:13.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  td.n{font-family:var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:20px;line-height:1}
+  .pill.good{background:var(--accent-soft);color:var(--accent-deep)}
+  .pill.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+  .pill.risk{background:color-mix(in srgb,var(--risk) 16%,transparent);color:var(--risk)}
+  ul.clean{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px}
+  ul.clean li{padding-left:20px;position:relative;color:var(--muted);font-size:14.5px;line-height:1.45}
+  ul.clean li::before{content:"";position:absolute;left:0;top:9px;width:8px;height:8px;border-radius:2px;background:var(--accent)}
+  ul.clean li strong{color:var(--ink)}
+  .note{font-size:12.5px;color:var(--faint);border-left:2px solid var(--line-strong);padding-left:12px;margin-top:14px}
+  .tag{font-family:var(--font-mono);font-size:11px;color:var(--faint);letter-spacing:.05em}
+  .caption{font-size:12px;color:var(--faint);margin-top:10px}
+  /* cover */
+  .cover .frame{max-width:1000px}
+  .cover-meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:34px;font-family:var(--font-mono);font-size:12.5px;color:var(--muted)}
+  .cover-meta b{color:var(--ink);font-weight:600}
+  .rail{height:3px;width:120px;background:linear-gradient(90deg,var(--accent),transparent);border-radius:3px;margin-top:26px}
+  /* divider slide */
+  .divider .frame{max-width:900px}
+  .divider h1{font-size:clamp(30px,5vw,56px)}
+  /* progress + controls */
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:40;transition:width .15s}
+  .counter{position:fixed;right:16px;bottom:14px;font-family:var(--font-mono);font-size:12px;color:var(--muted);
+    background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:5px 12px;z-index:40;box-shadow:var(--shadow)}
+  .toolbar{position:fixed;left:16px;bottom:14px;display:flex;gap:8px;z-index:40}
+  .btn{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.03em;color:var(--muted);background:var(--surface);
+    border:1px solid var(--line);border-radius:20px;padding:6px 13px;cursor:pointer;box-shadow:var(--shadow)}
+  .btn:hover{color:var(--accent);border-color:var(--accent)}
+  .btn:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .fadein{opacity:0;transform:translateY(10px);animation:fi .6s ease forwards}
+  @keyframes fi{to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.fadein{animation:none;opacity:1;transform:none}}
+  /* print → PDF (landscape, one slide per page) */
+  @media print{
+    @page{size:A4 landscape;margin:0}
+    body{background:#fff}
+    .progress,.counter,.toolbar{display:none!important}
+    .deck{scroll-snap-type:none}
+    .slide{min-height:auto;height:100vh;page-break-after:always;border-bottom:none;break-inside:avoid}
+    .card,.tile{box-shadow:none}
+    .fadein{animation:none;opacity:1;transform:none}
+  }
+</style>
+
+<div class="progress" id="progress" style="width: 20%;"></div>
+
+<main class="deck">
+
+  <!-- 1 · COVER -->
+  <section class="slide cover">
+    <div class="frame fadein">
+      <p class="eyebrow"><span>ACH Data · ACH Colombia</span><span class="num">INNLAB · U. Icesi</span></p>
+      <h1>Segmentación y hallazgos sobre los datos transaccionales de ACH</h1>
+      <p class="lead">Monetización analítica de los rieles de pago de Colombia — transferencias, PSE y aportes a
+      seguridad social — bajo metodología CRISP-DM.</p>
+      <div class="rail"></div>
+      <div class="cover-meta">
+        <span>4 casos de uso · <b>2 propios + 2 del equipo</b></span>
+        <span>Universo <b>40.892 personas</b></span>
+        <span>Julio 2026</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · CONTEXTO -->
+  <section class="slide">
+    <div class="frame">
+      <p class="eyebrow"><span>Contexto</span><span class="num">01</span></p>
+      <div class="cols c5-7">
+        <div class="stack">
+          <h2>Qué hicimos y qué cubre este resumen</h2>
+          <p>ACH Colombia mueve las transferencias interbancarias del país. El reto: descubrir modelos
+          analíticos <strong>partiendo del dato disponible</strong>. Se trabajaron tres extractos ofuscados
+          —Seguridad Social (PILA), Transferencias ACH/Transfiya y Pagos Digitales (PSE)— sobre la ventana
+          común 2025-01 → 2026-06.</p>
+          <p class="note">Este deck reúne el trabajo de tres frentes del equipo: nuestra segmentación
+          (Caso 05) y los modelos de consumo (Caso 04) e ingresos de independientes (Caso 02).</p>
+        </div>
+        <div class="stack">
+          <div class="card">
+            <h3>Frentes incluidos</h3>
+            <table>
+              <thead><tr><th>Caso</th><th>Tema</th><th>Modelos</th></tr></thead>
+              <tbody>
+                <tr><td><span class="tag">05</span></td><td>Segmentación (valor y ciclo de vida)</td><td class="n">2</td></tr>
+                <tr><td><span class="tag">04</span></td><td>Comportamientos de consumo</td><td class="n">5</td></tr>
+                <tr><td><span class="tag">02</span></td><td>Ingresos de independientes</td><td class="n">5</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="tiles">
+            <div class="tile accent"><div class="big">40.892</div><div class="lbl">personas en el universo combinado</div></div>
+            <div class="tile"><div class="big">18 meses</div><div class="lbl">ventana común de análisis</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · PREPARACIÓN -->
+  <section class="slide">
+    <div class="frame">
+      <p class="eyebrow"><span>Caso 05 · Preparación de datos</span><span class="num">02</span></p>
+      <h2>Resolver la ofuscación antes de modelar</h2>
+      <div class="cols c2">
+        <div class="stack">
+          <ul class="clean">
+            <li><strong>Llave por cédula.</strong> El documento se enmascara idéntico en las 3 fuentes → permite
+            cruzarlas. Se asume el riesgo de colisión (~13%, límite superior) por poder unir las tres.</li>
+            <li><strong>Cuenta propia excluida.</strong> ~19% de las transferencias son entre cuentas de la misma
+            persona: no son ingreso ni gasto, y se separan para no inflar el valor.</li>
+            <li><strong>Deduplicación.</strong> Duplicados exactos marginales (TRF 0,7%); lo que parecía repetido
+            eran columnas de resumen replicadas por diseño.</li>
+          </ul>
+        </div>
+        <div class="stack">
+          <div class="card">
+            <h3>Cruce entre fuentes (por cédula)</h3>
+            <div class="bars" style="margin-top:6px">
+              <div class="bar-row"><span class="bar-label">Universo (unión)</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-val">40.892</span></div>
+              <div class="bar-row"><span class="bar-label">Transferencias ∩ PSE</span><div class="bar-track"><div class="bar-fill" style="width:60%"></div></div><span class="bar-val">24.596</span></div>
+              <div class="bar-row"><span class="bar-label">Las 3 fuentes</span><div class="bar-track"><div class="bar-fill good" style="width:45%"></div></div><span class="bar-val">18.319</span></div>
+            </div>
+            <p class="caption">El núcleo de 18.319 personas con visión 360° alimenta la segmentación.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · EDA CLASIFICACIÓN -->
+  <section class="slide">
+    <div class="frame">
+      <p class="eyebrow"><span>Caso 05 · EDA</span><span class="num">03</span></p>
+      <h2>Quién cotiza, cómo y cuánto</h2>
+      <div class="cols c7-5">
+        <div class="card">
+          <h3>Clasificación de personas en Seguridad Social</h3>
+          <div class="bars" style="margin-top:8px">
+            <div class="bar-row"><span class="bar-label">Empleado</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-val">28.457 · 85,5%</span></div>
+            <div class="bar-row"><span class="bar-label">Independiente</span><div class="bar-track"><div class="bar-fill" style="width:11%"></div></div><span class="bar-val">3.123 · 9,4%</span></div>
+            <div class="bar-row"><span class="bar-label">Aprendiz</span><div class="bar-track"><div class="bar-fill" style="width:3.5%"></div></div><span class="bar-val">1.000 · 3,0%</span></div>
+            <div class="bar-row"><span class="bar-label">Magisterio</span><div class="bar-track"><div class="bar-fill" style="width:1.3%"></div></div><span class="bar-val">371 · 1,1%</span></div>
+            <div class="bar-row"><span class="bar-label">Pensionado</span><div class="bar-track"><div class="bar-fill" style="width:1.2%"></div></div><span class="bar-val">330 · 1,0%</span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="tiles" style="grid-template-columns:1fr">
+            <div class="tile warn"><div class="big">15,4%</div><div class="lbl">cotiza pensión ≥50% de sus meses — el resto no ahorra para su vejez</div></div>
+            <div class="tile"><div class="big">6,8%</div><div class="lbl">cotiza <em>todas</em> las prestaciones (pensión + salud + caja + riesgos)</div></div>
+          </div>
+          <p class="note">La mayoría cotiza salud pero muchos menos cotizan pensión → señal masiva de
+          informalidad / independencia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · MODELO CLV -->
+  <section class="slide">
+    <div class="frame">
+      <p class="eyebrow"><span>Caso 05 · Modelo #4 · Clustering</span><span class="num">04</span></p>
+      <h2>Segmentación por valor (CLV)</h2>
+      <div class="cols c7-5">
+        <div class="card">
+          <h3>4 segmentos · K-Means sobre 3 fuentes cruzadas · 32.164 personas</h3>
+          <div class="bars" style="margin-top:8px">
+            <div class="bar-row"><span class="bar-label">Alto valor · ingreso formal</span><div class="bar-track"><div class="bar-fill good" style="width:100%"></div></div><span class="bar-val">13.617 · 42,3%</span></div>
+            <div class="bar-row"><span class="bar-label">Valor medio · informal</span><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><span class="bar-val">9.802 · 30,5%</span></div>
+            <div class="bar-row"><span class="bar-label">Gastador digital (solo PSE)</span><div class="bar-track"><div class="bar-fill indigo" style="width:34%"></div></div><span class="bar-val">4.645 · 14,4%</span></div>
+            <div class="bar-row"><span class="bar-label">Bajo valor / en fuga</span><div class="bar-track"><div class="bar-fill soft" style="width:30%"></div></div><span class="bar-val">4.100 · 12,7%</span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <p>Se agrupa por dinero <strong>realmente movido</strong> (sin cuenta propia), frecuencia, recencia y
+          permanencia, enriquecido con el <strong>ingreso declarado</strong>.</p>
+          <ul class="clean">
+            <li><strong>Alto valor formal</strong> → retención premium, inversión y crédito de alto cupo.</li>
+            <li><strong>Gastador solo PSE</strong> → captar la nómina; alto potencial transaccional.</li>
+            <li><strong>Bajo valor / en fuga</strong> → reactivación de bajo costo o des-priorización.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · MODELO CICLO DE VIDA -->
+  <section class="slide">
+    <div class="frame">
+      <p class="eyebrow"><span>Caso 05 · Modelo · Clustering</span><span class="num">05</span></p>
+      <h2>Segmentación por ciclo de vida financiero</h2>
+      <div class="cols c7-5">
+        <div class="card">
+          <h3>5 etapas · anclado en Seguridad Social · 33.281 personas</h3>
+          <div class="bars" style="margin-top:8px">
+            <div class="bar-row"><span class="bar-label">Asalariado formal (salud sin pensión)</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-val">19.635 · 59,0%</span></div>
+            <div class="bar-row"><span class="bar-label">Base sin ingreso salud declarado</span><div class="bar-track"><div class="bar-fill soft" style="width:30%"></div></div><span class="bar-val">5.897 · 17,7%</span></div>
+            <div class="bar-row"><span class="bar-label">Formal consolidado (cotiza pensión)</span><div class="bar-track"><div class="bar-fill good" style="width:22%"></div></div><span class="bar-val">4.296 · 12,9%</span></div>
+            <div class="bar-row"><span class="bar-label">Independientes</span><div class="bar-track"><div class="bar-fill indigo" style="width:16%"></div></div><span class="bar-val">3.123 · 9,4%</span></div>
+            <div class="bar-row"><span class="bar-label">Pensionados</span><div class="bar-track"><div class="bar-fill warn" style="width:1.7%"></div></div><span class="bar-val">330 · 1,0%</span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <p>La <strong>etapa financiera</strong> —no la edad— define el producto que le sirve a cada persona.</p>
+          <ul class="clean">
+            <li><strong>Formal que cotiza pensión</strong> → target directo de <strong>AFP y aseguradoras</strong>
+            (Porvenir, Protección, Skandia, Sura).</li>
+            <li><strong>Independientes</strong> → formalización del ahorro pensional, crédito de ingreso variable.</li>
+            <li><strong>Base sin IBC declarado</strong> → inclusión financiera y microproductos.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · DIVIDER -->
+  <section class="slide divider">
+    <div class="frame">
+      <p class="eyebrow"><span>Trabajo del equipo</span><span class="num">Casos 04 y 02</span></p>
+      <h1>Del consumo observado al ingreso real que nadie está viendo</h1>
+      <p class="lead">Dos frentes complementarios: <strong>comportamientos de consumo</strong> (qué compra la
+      gente y a quién se le puede vender) y el <strong>estimador de ingresos de independientes</strong> (cuánto
+      gana de verdad quien declara el mínimo).</p>
+      <div class="rail"></div>
+    </div>
+  </section>
+
+  <!-- 8 · CASO 04 SEGMENTACIÓN + SHARE -->
+  <section class="slide">
+    <div class="frame">
+      <p class="eyebrow"><span>Caso 04 · Comportamientos de consumo</span><span class="num">06</span></p>
+      <h2>Segmentación RFM y captura de billetera</h2>
+      <div class="cols c7-5">
+        <div class="card">
+          <h3>Segmentos RFM de consumo (Modelo #15)</h3>
+          <div class="bars" style="margin-top:8px">
+            <div class="bar-row"><span class="bar-label">Perdidos</span><div class="bar-track"><div class="bar-fill soft" style="width:100%"></div></div><span class="bar-val">9.350 · 28,4%</span></div>
+            <div class="bar-row"><span class="bar-label">Regulares</span><div class="bar-track"><div class="bar-fill" style="width:70%"></div></div><span class="bar-val">6.586 · 20,0%</span></div>
+            <div class="bar-row"><span class="bar-label">Campeones</span><div class="bar-track"><div class="bar-fill good" style="width:67%"></div></div><span class="bar-val">6.279 · 19,1%</span></div>
+            <div class="bar-row"><span class="bar-label">Leales</span><div class="bar-track"><div class="bar-fill" style="width:47%"></div></div><span class="bar-val">4.382 · 13,3%</span></div>
+            <div class="bar-row"><span class="bar-label">Nuevos</span><div class="bar-track"><div class="bar-fill" style="width:27%"></div></div><span class="bar-val">2.513 · 7,6%</span></div>
+            <div class="bar-row"><span class="bar-label">En riesgo (alto valor)</span><div class="bar-track"><div class="bar-fill risk" style="width:11%"></div></div><span class="bar-val">1.021 · 3,1%</span></div>
+          </div>
+          <p class="caption">Validado con clustering no supervisado independiente: la estructura es real, no impuesta.</p>
+        </div>
+        <div class="stack">
+          <div class="tiles" style="grid-template-columns:1fr">
+            <div class="tile good"><div class="big">$8,97M</div><div class="lbl">gasto mediano de los <strong>Campeones</strong> — el segmento de mayor valor</div></div>
+            <div class="tile risk"><div class="big">1.021</div><div class="lbl">alto valor <strong>en riesgo</strong>: gastaban mucho, hoy inactivos → prioridad de retención</div></div>
+          </div>
+          <h3 style="margin-top:4px">Share of wallet (#16)</h3>
+          <p>Media persona gasta por este canal <strong>más de la mitad de lo que gana</strong> (mediana 0,51);
+          el gasto financiero se lleva el <strong>26,5%</strong> del ingreso.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · CASO 04 PROPENSIÓN -->
+  <section class="slide">
+    <div class="frame">
+      <p class="eyebrow"><span>Caso 04 · Propensión de compra</span><span class="num">07</span></p>
+      <h2>Predecir 3 meses reales hacia adelante</h2>
+      <div class="cols c2">
+        <div class="card">
+          <table>
+            <thead><tr><th>Modelo</th><th>Desempeño</th><th>Uso</th></tr></thead>
+            <tbody>
+              <tr><td>Turismo <span class="tag">#55</span></td><td><span class="pill good">El mejor</span></td><td>Encuentra clientes nuevos reales de viajes</td></tr>
+              <tr><td>Educación <span class="tag">#17</span></td><td><span class="pill warn">Moderado</span></td><td>Priorizar crédito educativo</td></tr>
+              <tr><td>Suscripciones <span class="tag">#57</span></td><td><span class="pill risk">Engañoso</span></td><td>Solo detecta continuidad</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="stack">
+          <h3>El hallazgo clave: honestidad de evaluación</h3>
+          <p>El modelo de suscripciones <strong>parece</strong> el más fuerte, pero evaluado solo en gente
+          <strong>sin historial previo</strong> su acierto cae al azar — únicamente confirma que quien ya pagaba
+          seguirá pagando. Turismo sí identifica candidatos <strong>genuinamente nuevos</strong>.</p>
+          <p class="note"><strong>Limitación declarada:</strong> el ofuscamiento impide reconocer marcas de
+          streaming (Netflix, Spotify). "Suscripción digital" se definió por patrón de pago recurrente, que
+          resultó dominado por planes de celular — se declaró la salvedad en vez de sobrevender.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · CASO 02 -->
+  <section class="slide">
+    <div class="frame">
+      <p class="eyebrow"><span>Caso 02 · Estimador de ingresos de independientes</span><span class="num">08</span></p>
+      <h2>Ganan 44% más de lo que declaran</h2>
+      <div class="cols c5-7">
+        <div class="stack">
+          <div class="tiles" style="grid-template-columns:1fr 1fr">
+            <div class="tile accent"><div class="big">+44%</div><div class="lbl">brecha media entre ingreso declarado y real en independientes (#6)</div></div>
+            <div class="tile"><div class="big">81%</div><div class="lbl">acierto del rango estimado por el modelo</div></div>
+            <div class="tile"><div class="big">65,7%</div><div class="lbl">de independientes declara exactamente 1 salario mínimo</div></div>
+            <div class="tile good"><div class="big">64%</div><div class="lbl">tiene sobrante positivo mensual (capacidad de ahorro, #41)</div></div>
+          </div>
+        </div>
+        <div class="stack">
+          <p>El canal ve <strong>71%</strong> de lo que gana un independiente vs. solo 22% de un empleado —
+          sirve justo para el grupo que interesa. La brecha se confirma por tipo (#8B): empleados 1,10 ·
+          independientes 1,44 · pensionados 1,73.</p>
+          <div class="card" style="border-color:var(--accent);background:var(--accent-soft)">
+            <div class="tag" style="color:var(--accent-deep)">EL NÚMERO QUE RESUME EL CASO</div>
+            <div style="font-family:var(--font-mono);font-size:clamp(30px,4vw,44px);font-weight:680;letter-spacing:-.02em;color:var(--accent-deep);margin:6px 0 4px">27.399</div>
+            <p style="color:var(--accent-deep);margin:0">personas mueven dinero por ACH pero <strong style="color:var(--accent-deep)">no aparecen en seguridad social</strong>: el mercado con capacidad de pago que hoy nadie ve.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · CIERRE -->
+  <section class="slide">
+    <div class="frame">
+      <p class="eyebrow"><span>Síntesis</span><span class="num">09</span></p>
+      <h2>Hallazgos transversales y próximos pasos</h2>
+      <div class="cols c2">
+        <div class="stack">
+          <h3>Lo que los tres frentes confirman</h3>
+          <ul class="clean">
+            <li><strong>La brecha declarado vs. real existe y es medible</strong> — informalidad masiva y +44% de ingreso oculto en independientes.</li>
+            <li><strong>La carga de deuda es alta</strong> — ~26% del ingreso se va en gasto financiero, visto en dos casos independientes.</li>
+            <li><strong>Hay un mercado invisible</strong> de 27.399 personas con capacidad de pago fuera de seguridad social.</li>
+            <li><strong>Rigor sobre marketing</strong> — se declararon las limitaciones (ofuscación, evaluación honesta) en vez de sobrevender.</li>
+          </ul>
+        </div>
+        <div class="stack">
+          <h3>Próximos pasos</h3>
+          <ul class="clean">
+            <li><strong>Re-extracción con llave hasheada</strong> consistente → elimina el riesgo de colisión asumido hoy.</li>
+            <li><strong>Resolver el truncamiento</strong> de Transferencias/PSE (tope de Excel) para volúmenes censales.</li>
+            <li><strong>Catálogo de comercios y edad</strong> → habilita capa geográfica y ciclo de vida real.</li>
+            <li><strong>Matriz valor × etapa</strong> combinando los dos modelos de segmentación.</li>
+          </ul>
+          <p class="note">Todo el trabajo se mantiene dentro de la Ley 1581 (Habeas Data); la trazabilidad
+          campo → señal → modelo es la herramienta de compliance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="counter" id="counter">03 / 11</div>
+<div class="toolbar"><button class="btn" id="print" type="button">Imprimir / PDF</button><button class="btn" id="theme" type="button">Tema</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const counter=document.getElementById('counter');
+  const progress=document.getElementById('progress');
+  const pad=n=>String(n).padStart(2,'0');
+  function update(){
+    const y=window.scrollY+window.innerHeight/2;
+    let i=slides.findIndex(s=>s.offsetTop<=y && s.offsetTop+s.offsetHeight>y);
+    if(i<0)i=0;
+    counter.textContent=`${pad(i+1)} / ${pad(slides.length)}`;
+    const max=document.body.scrollHeight-window.innerHeight;
+    progress.style.width=(max>0?(window.scrollY/max*100):0)+'%';
+  }
+  addEventListener('scroll',update,{passive:true});addEventListener('resize',update);update();
+  addEventListener('keydown',e=>{
+    const y=window.scrollY+window.innerHeight/2;
+    let i=slides.findIndex(s=>s.offsetTop<=y && s.offsetTop+s.offsetHeight>y);if(i<0)i=0;
+    if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();slides[Math.min(i+1,slides.length-1)].scrollIntoView({behavior:'smooth'})}
+    if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(i-1,0)].scrollIntoView({behavior:'smooth'})}
+  });
+  document.getElementById('print').onclick=()=>window.print();
+  const root=document.documentElement;
+  document.getElementById('theme').onclick=()=>{
+    const cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+    root.setAttribute('data-theme',cur==='dark'?'light':'dark');
+  };
+</script>
+
+</body></html>
