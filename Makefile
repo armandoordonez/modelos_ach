@@ -55,7 +55,7 @@ build: build-jobs  ## Construye todas las imágenes
 seed:  ## Sube los XLSX de ACH_DATA_DIR al bucket raw
 	@test -n "$$ACH_DATA_DIR" || (grep -q '^ACH_DATA_DIR=' .env 2>/dev/null) \
 		|| (echo "Define ACH_DATA_DIR en .env o en el entorno" && exit 1)
-	docker run --rm --network $${ACH_DOCKER_NETWORK:-ach_net} \
+	MSYS_NO_PATHCONV=1 docker run --rm --network $${ACH_DOCKER_NETWORK:-ach_net} \
 		--env-file .env \
 		-e ACH_S3_ENDPOINT=http://minio:9000 \
 		-e ACH_S3_ACCESS_KEY=$${MINIO_ROOT_USER:-minioadmin} \
