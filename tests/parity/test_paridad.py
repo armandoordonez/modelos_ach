@@ -5,7 +5,7 @@ Necesitan el dataset curado, así que se saltan solos si no existe. Se corren co
     make parity
 
 Los valores de referencia viven en ``referencias.json`` y su interpretación está en
-``docs/PARIDAD.md``. Para los tres modelos del Caso 05 la tolerancia es estrecha: deben
+``Docs/PARIDAD.md``. Para los tres modelos del Caso 05 la tolerancia es estrecha: deben
 reproducir el notebook. Para los de Caso 02 y 04 el valor esperado es el del
 re-baseline documentado, no el del script original.
 """
@@ -45,11 +45,18 @@ TOLERANCIA_POR_DEFECTO = 0.05
 
 
 def _resultado(model_id: str) -> dict | None:
-    storage = get_storage(get_settings())
-    ruta = storage.ruta(get_settings().bucket_results, model_id, "latest.json")
-    if not storage.existe(ruta):
+    """Lee el último resultado de un modelo. None si no está o si no hay bucket."""
+    ajustes = get_settings()
+    storage = get_storage(ajustes)
+    ruta = storage.ruta(ajustes.bucket_results, model_id, "latest.json")
+    try:
+        if not storage.existe(ruta):
+            return None
+        return storage.leer_json(ruta)
+    except Exception:  # noqa: BLE001
+        # No hay almacenamiento accesible (MinIO apagado, credenciales ausentes,
+        # endpoint inalcanzable): los tests de paridad se saltan, no fallan.
         return None
-    return storage.leer_json(ruta)
 
 
 @pytest.fixture(scope="module")
@@ -57,7 +64,11 @@ def resultados() -> dict[str, dict]:
     encontrados = {m.id: _resultado(m.id) for m in cargar_registro().modelos}
     disponibles = {k: v for k, v in encontrados.items() if v}
     if not disponibles:
-        pytest.skip("No hay resultados en el bucket. Corre la pipeline antes de 'make parity'.")
+        pytest.skip(
+            "No hay resultados accesibles en el bucket. Levanta el stack y corre la "
+            "pipeline, o exporta ACH_S3_ENDPOINT='' y ACH_LOCAL_ROOT para usar el "
+            "almacén local, antes de 'make parity'."
+        )
     return disponibles
 
 
@@ -83,7 +94,7 @@ def test_metricas_dentro_de_tolerancia(resultados, model_id):
                 f"(diferencia {diferencia:.4f} > tolerancia {limite:.4f})")
     assert not desviaciones, (
         f"{model_id} se salió de la referencia:\n" + "\n".join(desviaciones)
-        + "\nSi el cambio es intencional, actualiza referencias.json y docs/PARIDAD.md."
+        + "\nSi el cambio es intencional, actualiza referencias.json y Docs/PARIDAD.md."
     )
 
 

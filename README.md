@@ -81,5 +81,5 @@ Producción usa siempre `cedula-v1`.
 ## Documentación
 
 - `Docs/Entendimiento_Negocio_y_Datos.md` — contexto de negocio y hallazgos del EDA
-- `docs/CONTRATO_RESULTADOS.md` — esquema del JSON que consume el backend
-- `docs/PARIDAD.md` — métricas de referencia y deltas del re-baseline
+- `Docs/CONTRATO_RESULTADOS.md` — esquema del JSON que consume el backend
+- `Docs/PARIDAD.md` — métricas de referencia y deltas del re-baseline
