@@ -14,7 +14,7 @@ from typing import Any
 import yaml
 from pydantic import BaseModel, Field
 
-from .features import EstrategiaLlave
+from .config import EstrategiaLlave
 from .results import TaskType
 
 NOMBRE_ARCHIVO = "models_config.yml"

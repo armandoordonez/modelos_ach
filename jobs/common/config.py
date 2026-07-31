@@ -14,6 +14,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 Lineage = Literal["cedula-v1", "legacy"]
 
+# Estrategias de llave de persona. Vive aquí y no en features.py para que el backend
+# pueda leer el registro de modelos sin arrastrar pandas ni scikit-learn.
+EstrategiaLlave = Literal["cedula", "nombre_documento", "nombre_normalizado_documento_visible"]
+
 FUENTES = ("ss", "trf", "pse")
 
 

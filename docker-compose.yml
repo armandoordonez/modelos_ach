@@ -186,9 +186,10 @@ services:
   # Se levantan con: docker compose --profile app up -d                     #
   # --------------------------------------------------------------------- #
   backend:
-    profiles: ["app"]
     build:
-      context: ./backend
+      # El contexto es la raíz: la imagen reutiliza jobs/common como cliente del bucket.
+      context: .
+      dockerfile: backend/Dockerfile
     image: ach-backend:latest
     environment:
       ACH_S3_ENDPOINT: http://minio:9000
@@ -211,16 +212,24 @@ services:
     restart: unless-stopped
 
   frontend:
-    profiles: ["app"]
     build:
       context: ./frontend
     image: ach-frontend:latest
     environment:
-      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+      # Se inyecta en tiempo de arranque, no de build: cambiar la URL de la API no
+      # obliga a reconstruir la imagen.
+      ACH_API_URL: ${VITE_API_URL:-http://localhost:8000}
     ports:
       - "${FRONTEND_PORT:-5173}:80"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:

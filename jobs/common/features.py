@@ -18,18 +18,15 @@ from __future__ import annotations
 import logging
 import re
 import unicodedata
-from typing import Literal
 
 import numpy as np
 import pandas as pd
 
-from .config import Settings, get_settings
+from .config import EstrategiaLlave, Settings, get_settings
 from .schema import COLUMNA_NOMBRE, COLUMNA_PERIODO, COLUMNA_PERSONA
 from .storage import Storage, get_storage
 
 log = logging.getLogger(__name__)
-
-EstrategiaLlave = Literal["cedula", "nombre_documento", "nombre_normalizado_documento_visible"]
 
 RUTA_CURADO = "dataset.parquet"
 ARCHIVO_MANIFIESTO = "_manifest.json"

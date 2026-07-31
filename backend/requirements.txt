@@ -1,0 +1,11 @@
+# Dependencias de la API. Deliberadamente livianas: el backend solo lee JSON del
+# bucket, así que no necesita pandas, pyarrow ni scikit-learn. El cliente de
+# almacenamiento de common/ los importa de forma diferida justo para permitir esto.
+
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30
+pydantic>=2.7,<3
+pydantic-settings>=2.2
+fsspec>=2024.2
+s3fs>=2024.2
+PyYAML>=6
