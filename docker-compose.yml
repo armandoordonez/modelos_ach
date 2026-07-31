@@ -222,7 +222,9 @@ services:
     ports:
       - "${FRONTEND_PORT:-5173}:80"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost/"]
+      # 127.0.0.1 y no localhost: dentro del contenedor localhost resuelve primero a
+      # ::1 y nginx solo escucha en IPv4, así que el chequeo daría connection refused.
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1/"]
       interval: 15s
       timeout: 5s
       retries: 5
