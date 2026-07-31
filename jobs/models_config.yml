@@ -1,0 +1,115 @@
+# Registro de modelos de la pipeline.
+#
+# ESTE ES EL ÚNICO ARCHIVO QUE HAY QUE TOCAR PARA AGREGAR UN MODELO.
+# El DAG, el backend y el frontend lo leen; ninguno necesita cambios.
+#
+# Campos:
+#   id          identificador estable; da nombre a results/<id>/
+#   nombre      etiqueta legible para el tablero
+#   catalogo    número del modelo en el catálogo ACH
+#   caso_uso    1..5
+#   task_type   clustering | regression | classification | scoring
+#   modulo      módulo Python con la interfaz CLI estándar
+#   legacy_key  llave de persona del script original; SOLO se usa con ACH_LINEAGE=legacy
+#   params      parámetros propios del modelo (no se auto-eligen en tiempo de ejecución)
+
+schema_version: "1.0"
+
+modelos:
+  - id: caso02_ingresos_independientes
+    nombre: "Estimador de ingresos para independientes"
+    catalogo: "#6"
+    caso_uso: 2
+    task_type: regression
+    modulo: models.caso02_ingresos.main
+    legacy_key: nombre_documento
+    params:
+      smlmv: 1423500
+      test_size: 0.25
+      max_iter: 400
+      learning_rate: 0.05
+      max_depth: 6
+      min_samples_leaf: 40
+      l2_regularization: 1.0
+
+  - id: caso04_rfm_consumidores
+    nombre: "Segmentación RFM de consumidores"
+    catalogo: "#15"
+    caso_uso: 4
+    task_type: clustering
+    modulo: models.caso04_rfm.main
+    legacy_key: nombre_normalizado_documento_visible
+    params:
+      k_min: 2
+      k_max: 8
+
+  - id: caso04_propension_salud
+    nombre: "Propensión de compra por categoría (salud)"
+    catalogo: "#17"
+    caso_uso: 4
+    task_type: classification
+    modulo: models.caso04_propension.main
+    legacy_key: nombre_normalizado_documento_visible
+    params:
+      # Categoría fija: el script original la re-elegía sola si no aparecía en los
+      # datos, lo que hacía que el mismo model_id entrenara modelos distintos.
+      categoria: Salud
+      meses_objetivo: 4
+      n_estimators: 300
+      max_depth: 12
+      min_samples_leaf: 3
+      test_size: 0.20
+
+  - id: caso04_propension_turismo
+    nombre: "Propensión a viajes y turismo"
+    catalogo: "#55"
+    caso_uso: 4
+    task_type: classification
+    modulo: models.caso04_propension.main
+    legacy_key: nombre_normalizado_documento_visible
+    params:
+      categoria: Viajes / transporte
+      meses_objetivo: 4
+      n_estimators: 300
+      max_depth: 12
+      min_samples_leaf: 3
+      test_size: 0.20
+
+  - id: caso05_clv
+    nombre: "Segmentación de clientes por valor (CLV)"
+    catalogo: "#4"
+    caso_uso: 5
+    task_type: clustering
+    modulo: models.caso05_clv.main
+    legacy_key: cedula
+    params:
+      k_min: 4
+      k_max: 8
+      seed: 0
+
+  - id: caso05_ciclo_vida
+    nombre: "Segmentación por ciclo de vida financiero"
+    catalogo: "#46"
+    caso_uso: 5
+    task_type: clustering
+    modulo: models.caso05_ciclo_vida.main
+    legacy_key: cedula
+    params:
+      k_min: 4
+      k_max: 8
+      seed: 0
+
+  - id: caso05_pensionados
+    nombre: "Segmentación de pensionados por consumo"
+    catalogo: "#101"
+    caso_uso: 5
+    task_type: clustering
+    modulo: models.caso05_pensionados.main
+    legacy_key: cedula
+    params:
+      k_min: 3
+      k_max: 7
+      seed: 42
+      min_segmento: 0.05
+      max_segmento: 0.50
+      min_meses_pse: 2
