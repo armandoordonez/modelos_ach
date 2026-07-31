@@ -175,7 +175,9 @@ def generar_transferencias(personas: pd.DataFrame, periodos: list[str],
         for periodo in periodos:
             if rng.random() > persona.actividad:
                 continue
-            recibido = float(persona.ingreso * rng.normal(0.85, 0.2))
+            # El piso en cero no es cosmético: la validación del diccionario de datos
+            # rechaza montos negativos, y una normal con esta dispersión los produce.
+            recibido = max(float(persona.ingreso * rng.normal(0.85, 0.2)), 0.0)
             base = {
                 "Nombre": persona.nombre, "Tipo documento": "P", "Número documento": persona.documento,
                 "Promedio ACH recibidas": 0, "Promedio Transfiya recibidas": 0,
