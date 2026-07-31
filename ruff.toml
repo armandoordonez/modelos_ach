@@ -1,0 +1,11 @@
+# Configuración de estilo del repo. jobs/pyproject.toml define la del paquete;
+# esta cubre también tests/, que vive fuera del paquete.
+line-length = 110
+target-version = "py311"
+
+[lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
+
+[lint.isort]
+known-first-party = ["common", "processing", "models"]

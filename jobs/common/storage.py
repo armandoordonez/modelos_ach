@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import json
 import logging
-from typing import Any, Iterable
+from collections.abc import Iterable
+from typing import Any
 
 import fsspec
 import pandas as pd
@@ -159,7 +160,7 @@ class _EscritorLotes:
         self._escritor.write_table(tabla)
         self.filas += tabla.num_rows
 
-    def __enter__(self) -> "_EscritorLotes":
+    def __enter__(self) -> _EscritorLotes:
         return self
 
     def __exit__(self, *excepcion) -> None:

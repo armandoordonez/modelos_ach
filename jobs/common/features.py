@@ -158,6 +158,11 @@ def categorizar_comercio(serie: pd.Series) -> pd.Series:
     return serie.astype("string").map(mapa).fillna(CATEGORIA_POR_DEFECTO)
 
 
+def columnas_gasto() -> list[str]:
+    """Nombres de las columnas de gasto por categoría en la tabla persona-mes de PSE."""
+    return [f"gasto_{categoria}" for categoria in (*CATEGORIAS_COMERCIO, CATEGORIA_POR_DEFECTO)]
+
+
 # --------------------------------------------------------------------------- #
 # 3) Decodificadores de entidades ofuscadas                                    #
 # --------------------------------------------------------------------------- #

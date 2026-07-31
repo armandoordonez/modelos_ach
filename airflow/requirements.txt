@@ -1,0 +1,7 @@
+# Dependencias de Airflow. Solo orquestación.
+#
+# Deliberadamente NO están aquí pandas, numpy ni scikit-learn: los modelos corren en
+# contenedores aparte con la imagen de jobs.
+
+apache-airflow-providers-docker>=4.0.0
+PyYAML>=6

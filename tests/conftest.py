@@ -13,7 +13,7 @@ RAIZ_JOBS = Path(__file__).resolve().parents[1] / "jobs"
 if str(RAIZ_JOBS) not in sys.path:
     sys.path.insert(0, str(RAIZ_JOBS))
 
-from common.config import Settings  # noqa: E402
+from common.config import Settings  # noqa: E402  (el paquete se resuelve arriba)
 from common.storage import Storage  # noqa: E402
 
 

@@ -44,3 +44,6 @@ dist/
 Thumbs.db
 desktop.ini
 .ipynb_checkpoints/
+
+# --- Almacen local de desarrollo ---
+.localstore/

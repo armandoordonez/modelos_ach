@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 import yaml
+from pydantic import ValidationError
 
 from common.registry import RegistroModelos, cargar_registro, ruta_config
 
@@ -114,7 +115,7 @@ def test_task_type_invalido_falla(tmp_path):
          "modulo": "models.x.main"}]}
     destino = tmp_path / "models_config.yml"
     destino.write_text(yaml.safe_dump(contenido), encoding="utf-8")
-    with pytest.raises(Exception):
+    with pytest.raises(ValidationError):
         cargar_registro(destino)
 
 

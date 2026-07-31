@@ -1,0 +1,229 @@
+# Stack completo de la pipeline de modelos de ACH.
+#
+#   make up      levanta todo
+#   make seed    sube los XLSX al bucket raw
+#
+# Ejecutor: LocalExecutor. Para este volumen no hace falta Celery ni Redis; sumarlos
+# solo añadiría dos servicios más que mantener.
+
+x-airflow-comun: &airflow-comun
+  build:
+    context: ./airflow
+    args:
+      AIRFLOW_VERSION: ${AIRFLOW_VERSION:-3.0.3}
+  image: ach-airflow:${AIRFLOW_VERSION:-3.0.3}
+  environment: &airflow-entorno
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+    AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW_FERNET_KEY:-}
+    AIRFLOW__CORE__PARALLELISM: ${AIRFLOW_PARALLELISM:-4}
+    AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG: ${AIRFLOW_MAX_ACTIVE_TASKS:-4}
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:-airflow}@postgres:5432/${POSTGRES_DB:-airflow}
+    AIRFLOW__API__SECRET_KEY: ${AIRFLOW_SECRET_KEY:-cambia-esta-clave-en-produccion}
+    AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW_JWT_SECRET:-cambia-esta-clave-en-produccion}
+    AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: ${AIRFLOW_ADMIN_USER:-admin}:admin
+    AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE: /opt/airflow/simple_auth_manager_passwords.json
+    # --- Configuración que el DAG pasa a los contenedores de jobs ---
+    ACH_JOBS_IMAGE: ${ACH_JOBS_IMAGE:-ach-jobs:latest}
+    ACH_DOCKER_NETWORK: ${ACH_DOCKER_NETWORK:-ach_net}
+    ACH_MODELS_CONFIG: /opt/airflow/config/models_config.yml
+    ACH_POOL_MODELOS: ${ACH_POOL_MODELOS:-modelos}
+    ACH_S3_ENDPOINT: http://minio:9000
+    ACH_S3_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+    ACH_S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    ACH_BUCKET_RAW: ${ACH_BUCKET_RAW:-raw}
+    ACH_BUCKET_CURATED: ${ACH_BUCKET_CURATED:-curated}
+    ACH_BUCKET_RESULTS: ${ACH_BUCKET_RESULTS:-results}
+    ACH_LINEAGE: ${ACH_LINEAGE:-cedula-v1}
+    ACH_WINDOW_START: ${ACH_WINDOW_START:-2025-01}
+    ACH_WINDOW_END: ${ACH_WINDOW_END:-2026-06}
+    ACH_SEED: ${ACH_SEED:-42}
+    ACH_LOG_LEVEL: ${ACH_LOG_LEVEL:-INFO}
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags:ro
+    - ./jobs/models_config.yml:/opt/airflow/config/models_config.yml:ro
+    - airflow-logs:/opt/airflow/logs
+    # El socket de Docker: es lo que le permite a Airflow lanzar los contenedores de jobs.
+    - /var/run/docker.sock:/var/run/docker.sock
+  # uid de airflow y gid 0: el socket de Docker pertenece al grupo root.
+  user: "50000:0"
+  depends_on:
+    postgres:
+      condition: service_healthy
+  restart: unless-stopped
+
+services:
+  # --------------------------------------------------------------------- #
+  # Metadatos de Airflow                                                    #
+  # --------------------------------------------------------------------- #
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-airflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-airflow}
+      POSTGRES_DB: ${POSTGRES_DB:-airflow}
+    volumes:
+      - postgres-datos:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-airflow} -d ${POSTGRES_DB:-airflow}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------- #
+  # Almacenamiento S3                                                       #
+  # --------------------------------------------------------------------- #
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - minio-datos:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    restart: unless-stopped
+
+  minio-init:
+    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      ACH_BUCKET_RAW: ${ACH_BUCKET_RAW:-raw}
+      ACH_BUCKET_CURATED: ${ACH_BUCKET_CURATED:-curated}
+      ACH_BUCKET_RESULTS: ${ACH_BUCKET_RESULTS:-results}
+    entrypoint: >
+      /bin/sh -c '
+        mc alias set local http://minio:9000 "$${MINIO_ROOT_USER}" "$${MINIO_ROOT_PASSWORD}";
+        for bucket in "$${ACH_BUCKET_RAW}" "$${ACH_BUCKET_CURATED}" "$${ACH_BUCKET_RESULTS}"; do
+          mc mb --ignore-existing "local/$${bucket}";
+        done;
+        echo "Buckets listos";
+      '
+    restart: "no"
+
+  # --------------------------------------------------------------------- #
+  # Airflow                                                                 #
+  # --------------------------------------------------------------------- #
+  airflow-init:
+    <<: *airflow-comun
+    entrypoint: >
+      /bin/bash -c '
+        airflow db migrate &&
+        airflow pools set "$${ACH_POOL_MODELOS}" "$${ACH_POOL_SLOTS}" "Modelos en paralelo (limitado por memoria del host)" &&
+        echo "Airflow inicializado"
+      '
+    environment:
+      <<: *airflow-entorno
+      ACH_POOL_SLOTS: ${ACH_POOL_SLOTS:-2}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  airflow-apiserver:
+    <<: *airflow-comun
+    command: api-server
+    ports:
+      - "${AIRFLOW_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/v2/monitor/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-scheduler:
+    <<: *airflow-comun
+    command: scheduler
+    healthcheck:
+      test: ["CMD-SHELL", "airflow jobs check --job-type SchedulerJob --hostname \"$${HOSTNAME}\""]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  # En Airflow 3 el parseo de DAGs es un proceso aparte del scheduler.
+  airflow-dag-processor:
+    <<: *airflow-comun
+    command: dag-processor
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  # --------------------------------------------------------------------- #
+  # API y tablero (los construye el equipo de backend/frontend)             #
+  # Se levantan con: docker compose --profile app up -d                     #
+  # --------------------------------------------------------------------- #
+  backend:
+    profiles: ["app"]
+    build:
+      context: ./backend
+    image: ach-backend:latest
+    environment:
+      ACH_S3_ENDPOINT: http://minio:9000
+      ACH_S3_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+      ACH_S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      ACH_BUCKET_RESULTS: ${ACH_BUCKET_RESULTS:-results}
+      ACH_CORS_ORIGINS: ${ACH_CORS_ORIGINS:-http://localhost:5173}
+      ACH_CACHE_TTL: ${ACH_CACHE_TTL:-30}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    profiles: ["app"]
+    build:
+      context: ./frontend
+    image: ach-frontend:latest
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    ports:
+      - "${FRONTEND_PORT:-5173}:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres-datos:
+  minio-datos:
+  airflow-logs:
+
+networks:
+  default:
+    name: ${ACH_DOCKER_NETWORK:-ach_net}

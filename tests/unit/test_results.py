@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from pydantic import ValidationError
@@ -26,7 +26,7 @@ def _dataset() -> DatasetInfo:
 
 
 def test_resultado_minimo_calcula_la_duracion():
-    inicio = datetime.now(timezone.utc) - timedelta(seconds=5)
+    inicio = datetime.now(UTC) - timedelta(seconds=5)
     resultado = construir_resultado(
         model_id="caso05_clv", model_name="CLV", catalog_ref="#4", use_case=5,
         task_type="clustering", run_id="manual__2026-07-30T120000Z",
@@ -38,7 +38,7 @@ def test_resultado_minimo_calcula_la_duracion():
 
 
 def test_las_metricas_deben_ser_finitas():
-    inicio = datetime.now(timezone.utc)
+    inicio = datetime.now(UTC)
     for valor in (float("nan"), float("inf")):
         with pytest.raises(ValidationError, match="no admite NaN"):
             construir_resultado(
@@ -52,7 +52,7 @@ def test_task_type_invalido_falla():
     with pytest.raises(ValidationError):
         ModelResult(
             model_id="m", model_name="M", use_case=5, task_type="magia", run_id="r",
-            started_at=datetime.now(timezone.utc), finished_at=datetime.now(timezone.utc),
+            started_at=datetime.now(UTC), finished_at=datetime.now(UTC),
             duration_seconds=1.0, dataset=_dataset(),
         )
 
@@ -61,7 +61,7 @@ def test_caso_de_uso_fuera_de_rango_falla():
     with pytest.raises(ValidationError):
         ModelResult(
             model_id="m", model_name="M", use_case=9, task_type="clustering", run_id="r",
-            started_at=datetime.now(timezone.utc), finished_at=datetime.now(timezone.utc),
+            started_at=datetime.now(UTC), finished_at=datetime.now(UTC),
             duration_seconds=1.0, dataset=_dataset(),
         )
 
@@ -96,7 +96,7 @@ def test_resultado_fallido_conserva_el_error_y_no_inventa_metricas():
     resultado = construir_fallo(
         model_id="caso04_propension_salud", model_name="Propensión", catalog_ref="#17",
         use_case=4, task_type="classification", run_id="r",
-        started_at=datetime.now(timezone.utc), dataset=_dataset(),
+        started_at=datetime.now(UTC), dataset=_dataset(),
         error="No hay suficientes positivos en la ventana objetivo",
     )
     assert resultado.status == "failed"
@@ -107,13 +107,13 @@ def test_resultado_fallido_conserva_el_error_y_no_inventa_metricas():
 def test_el_error_se_trunca_para_no_inflar_el_json():
     resultado = construir_fallo(
         model_id="m", model_name="M", catalog_ref="", use_case=5, task_type="clustering",
-        run_id="r", started_at=datetime.now(timezone.utc), dataset=_dataset(), error="x" * 5000,
+        run_id="r", started_at=datetime.now(UTC), dataset=_dataset(), error="x" * 5000,
     )
     assert len(resultado.error) == 2000
 
 
 def test_el_json_es_serializable_y_omite_lo_vacio():
-    inicio = datetime.now(timezone.utc)
+    inicio = datetime.now(UTC)
     resultado = construir_resultado(
         model_id="caso05_pensionados", model_name="Pensionados", catalog_ref="#101", use_case=5,
         task_type="clustering", run_id="r", started_at=inicio, dataset=_dataset(),
@@ -135,10 +135,10 @@ def test_indice_de_resultados_resume_la_corrida():
         run_id="manual__2026-07-30T120000Z", total_models=2, successful=1, failed=1,
         models=[
             EntradaIndice(model_id="a", model_name="A", use_case=5, task_type="clustering",
-                          status="success", run_id="r", finished_at=datetime.now(timezone.utc),
+                          status="success", run_id="r", finished_at=datetime.now(UTC),
                           duration_seconds=1.0, metrics={"silhouette": 0.3}),
             EntradaIndice(model_id="b", model_name="B", use_case=4, task_type="classification",
-                          status="failed", run_id="r", finished_at=datetime.now(timezone.utc),
+                          status="failed", run_id="r", finished_at=datetime.now(UTC),
                           duration_seconds=0.5, error="falló"),
         ],
     )

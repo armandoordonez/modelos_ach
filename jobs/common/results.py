@@ -8,7 +8,7 @@ modelo no reporta un bloque, el frontend simplemente no dibuja esa sección.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -20,7 +20,7 @@ Estado = Literal["success", "failed"]
 
 
 def ahora_utc() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class DatasetInfo(BaseModel):
