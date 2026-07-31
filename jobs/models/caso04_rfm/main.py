@@ -92,14 +92,21 @@ def ejecutar(ctx: ContextoModelo) -> ModelResult:
     X = rfm[FEATURES].to_numpy()
     Xs = StandardScaler().fit_transform(X)
 
-    k_min = int(ctx.param("k_min", 2))
+    # Se explora desde k=4: con k=2 la silueta es más alta pero el corte es
+    # "gasta / no gasta", que no le sirve a nadie para armar una campaña. Es el mismo
+    # criterio de accionabilidad que usan los demás modelos de segmentación.
+    k_min = int(ctx.param("k_min", 4))
     k_max = min(int(ctx.param("k_max", 8)), len(rfm) - 1)
+    # La silueta se calcula sobre una muestra: es O(n²) y aquí hay decenas de miles
+    # de personas. La muestra es fija por semilla, así que el resultado es reproducible.
+    muestra = np.random.RandomState(semilla).choice(len(Xs), min(8000, len(Xs)), replace=False)
     seleccion, siluetas = [], []
     for k in range(k_min, k_max + 1):
-        etiquetas = KMeans(n_clusters=k, n_init=20, random_state=semilla).fit_predict(Xs)
-        silueta = float(silhouette_score(Xs, etiquetas))
+        km = KMeans(n_clusters=k, n_init=20, random_state=semilla).fit(Xs)
+        silueta = float(silhouette_score(Xs[muestra], km.labels_[muestra]))
         siluetas.append(silueta)
-        seleccion.append(PuntoSeleccionK(k=k, silhouette=round(silueta, 6)))
+        seleccion.append(PuntoSeleccionK(k=k, silhouette=round(silueta, 6),
+                                         inertia=round(float(km.inertia_), 3)))
     K = list(range(k_min, k_max + 1))[int(np.argmax(siluetas))]
     log.info("k elegido: %d (silueta %.3f)", K, max(siluetas))
 

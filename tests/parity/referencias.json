@@ -1,0 +1,111 @@
+{
+  "generado_en": "2026-07-31",
+  "lineage": "cedula-v1",
+  "descripcion": "Valores de referencia del re-baseline. Ver docs/PARIDAD.md.",
+  "modelos": {
+    "caso05_clv": {
+      "task_type": "clustering",
+      "paridad": "exacta",
+      "metricas_esperadas": {
+        "n_entities": 32164.0,
+        "k": 4.0,
+        "silhouette": 0.230666
+      },
+      "metricas_notebook_original": {
+        "n_entities": 32164,
+        "k": 4,
+        "silhouette": 0.231
+      },
+      "n_segmentos": 4
+    },
+    "caso05_ciclo_vida": {
+      "task_type": "clustering",
+      "paridad": "exacta",
+      "metricas_esperadas": {
+        "n_entities": 33281.0,
+        "k": 5.0,
+        "silhouette": 0.349623,
+        "pct_con_transaccional": 73.774826
+      },
+      "metricas_notebook_original": {
+        "n_entities": 33281,
+        "k": 5,
+        "silhouette": 0.35,
+        "pct_con_transaccional": 73.8
+      },
+      "n_segmentos": 5
+    },
+    "caso05_pensionados": {
+      "task_type": "clustering",
+      "paridad": "exacta",
+      "metricas_esperadas": {
+        "n_entities": 360.0,
+        "k": 4.0,
+        "silhouette": 0.271328,
+        "davies_bouldin": 1.201439,
+        "pensionados_identificados": 583.0
+      },
+      "metricas_notebook_original": {
+        "n_entities": 360,
+        "k": 4,
+        "silhouette": 0.271,
+        "davies_bouldin": 1.201,
+        "pensionados_identificados": 583
+      },
+      "n_segmentos": 4
+    },
+    "caso02_ingresos_independientes": {
+      "task_type": "regression",
+      "paridad": "re-baseline",
+      "metricas_esperadas": {
+        "r2_log": 0.445028,
+        "mape": 0.254362,
+        "n_entrenamiento": 8696.0
+      },
+      "metricas_notebook_original": {
+        "r2_log": 0.473,
+        "mape": 0.255
+      },
+      "n_segmentos": 0
+    },
+    "caso04_rfm_consumidores": {
+      "task_type": "clustering",
+      "paridad": "re-baseline",
+      "metricas_esperadas": {
+        "n_entities": 29856.0,
+        "k": 4.0,
+        "silhouette": 0.405192
+      },
+      "metricas_notebook_original": {
+        "silhouette": 0.498
+      },
+      "n_segmentos": 4
+    },
+    "caso04_propension_salud": {
+      "task_type": "classification",
+      "paridad": "re-baseline",
+      "metricas_esperadas": {
+        "roc_auc": 0.697568,
+        "roc_auc_nuevos_adoptantes": 0.677794,
+        "n_positivos": 398.0
+      },
+      "metricas_notebook_original": {
+        "roc_auc": 0.835
+      },
+      "n_segmentos": 0
+    },
+    "caso04_propension_turismo": {
+      "task_type": "classification",
+      "paridad": "re-baseline",
+      "metricas_esperadas": {
+        "roc_auc": 0.748758,
+        "roc_auc_nuevos_adoptantes": 0.744073,
+        "n_positivos": 736.0
+      },
+      "metricas_notebook_original": {
+        "roc_auc": 0.741
+      },
+      "n_segmentos": 0
+    }
+  }
+}

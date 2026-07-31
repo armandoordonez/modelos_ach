@@ -24,6 +24,11 @@ modelos:
     modulo: models.caso02_ingresos.main
     legacy_key: nombre_documento
     params:
+      # Ventana propia: el análisis original se detiene en 2025-09 porque Transfiya
+      # se degrada desde octubre y contaminaría las features de flujo. Queda declarada
+      # aquí en vez de fija en el código.
+      ventana_inicio: "2025-01"
+      ventana_fin: "2025-09"
       smlmv: 1423500
       test_size: 0.25
       max_iter: 400
@@ -40,7 +45,9 @@ modelos:
     modulo: models.caso04_rfm.main
     legacy_key: nombre_normalizado_documento_visible
     params:
-      k_min: 2
+      # k >= 4 por accionabilidad: con k=2 la silueta sube pero el corte es
+      # "gasta / no gasta". Mismo criterio que los modelos del Caso 05.
+      k_min: 4
       k_max: 8
 
   - id: caso04_propension_salud
