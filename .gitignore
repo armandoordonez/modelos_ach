@@ -1,0 +1,46 @@
+# --- Datos (confidenciales, nunca se versionan) ---------------------------
+Data/
+data/
+*.xlsx
+!Docs/*.xlsx
+*.parquet
+*.csv
+!tests/**/*.csv
+
+# --- Secretos --------------------------------------------------------------
+.env
+.env.local
+*.pem
+*.key
+
+# --- Artefactos de modelos -------------------------------------------------
+artifacts/
+*.joblib
+*.pkl
+
+# --- Python ----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Airflow ---------------------------------------------------------------
+airflow/logs/
+airflow/plugins/
+logs/
+
+# --- Node / frontend -------------------------------------------------------
+node_modules/
+dist/
+.vite/
+
+# --- Sistema ---------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.ipynb_checkpoints/
