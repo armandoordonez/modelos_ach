@@ -16,7 +16,10 @@ help:  ## Muestra esta ayuda
 # --------------------------------------------------------------------------- #
 up: build-jobs  ## Levanta todo el stack (Airflow, MinIO, Postgres)
 	@test -f .env || (echo "Falta .env — copiando desde .env.example" && cp .env.example .env)
-	$(COMPOSE) up -d --build
+	@# La imagen de Airflow la comparten cuatro servicios: se construye una sola vez
+	@# para que no colisionen construyéndola en paralelo.
+	$(COMPOSE) build airflow-init
+	$(COMPOSE) up -d
 	@echo ""
 	@echo "  Airflow  → http://localhost:$${AIRFLOW_PORT:-8080}"
 	@echo "  MinIO    → http://localhost:$${MINIO_CONSOLE_PORT:-9001}"
@@ -24,7 +27,8 @@ up: build-jobs  ## Levanta todo el stack (Airflow, MinIO, Postgres)
 	@echo "  Siguiente paso: make seed (sube los XLSX) y dispara el DAG pipeline_modelos."
 
 up-app: build-jobs  ## Levanta el stack incluyendo backend y frontend
-	$(COMPOSE) --profile app up -d --build
+	$(COMPOSE) build airflow-init
+	$(COMPOSE) --profile app up -d
 
 down:  ## Apaga el stack (conserva los datos)
 	$(COMPOSE) --profile app down

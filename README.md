@@ -24,13 +24,17 @@ XLSX crudos ──▶ job de procesamiento ──▶ curated/dataset.parquet ─
 ## Arranque
 
 ```bash
-cp .env.example .env      # revisar credenciales locales
+cp .env.example .env      # apuntar ACH_DATA_DIR a la carpeta con los 3 XLSX
 make up                   # levanta todo el stack
-make seed                 # sube los XLSX a raw/ (requiere ACH_DATA_DIR)
+make seed                 # sube los XLSX a raw/
 ```
 
 Airflow queda en <http://localhost:8080>, MinIO en <http://localhost:9001>.
 Disparar el DAG `pipeline_modelos` desde la UI ejecuta la pipeline completa.
+
+> **Windows sin GNU make:** usa `make.cmd` (mismo juego de comandos) desde cmd o
+> PowerShell, o instala make con `choco install make`. En Git Bash, WSL, macOS y Linux
+> se usa el `Makefile` normal.
 
 ## Comandos
 
