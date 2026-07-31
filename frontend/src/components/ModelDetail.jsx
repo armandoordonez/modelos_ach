@@ -151,7 +151,7 @@ export default function ModelDetail({ modelId, onVolver }) {
         </Seccion>
       )}
 
-      {Object.keys(resultado.artifacts || {}).length > 0 && (
+      {!api.estatico && Object.keys(resultado.artifacts || {}).length > 0 && (
         <Seccion titulo="Artefactos" descripcion="Se descargan a través del backend; el navegador nunca ve las credenciales del bucket.">
           <ul className="artefactos">
             {Object.entries(resultado.artifacts).map(([nombre, ruta]) => {

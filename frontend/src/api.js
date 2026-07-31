@@ -1,10 +1,34 @@
 // Cliente de la API. La URL llega en tiempo de arranque desde /config.js, nunca
 // horneada en el bundle ni con credenciales: el navegador solo habla con el backend.
+//
+// Modo estático: con `modo: "estatico"` el tablero lee archivos JSON exportados en vez
+// de llamar al backend. Sirve para publicar una demo en cualquier hosting de estáticos
+// (Netlify, Vercel, GitHub Pages, un bucket) sin levantar infraestructura. Los datos
+// quedan congelados en el momento de la exportación.
 
-const BASE = (window.__ACH_CONFIG__?.apiUrl || 'http://localhost:8000').replace(/\/$/, '')
+const CONFIG = window.__ACH_CONFIG__ || {}
+const BASE = (CONFIG.apiUrl || 'http://localhost:8000').replace(/\/$/, '')
+const ESTATICO = CONFIG.modo === 'estatico'
+
+/** En modo estático cada ruta de la API tiene su archivo exportado. */
+function rutaEstatica(ruta) {
+  const modelo = ruta.match(/^\/api\/models\/([^/]+)\/(latest|runs)$/)
+  if (modelo) {
+    const [, id, recurso] = modelo
+    return recurso === 'latest'
+      ? `./datos/modelos/${id}.json`
+      : `./datos/modelos/${id}-runs.json`
+  }
+  if (ruta === '/api/models') return './datos/models.json'
+  if (ruta === '/health') return './datos/health.json'
+  const corrida = ruta.match(/^\/api\/runs\/(.+)$/)
+  if (corrida) return `./datos/corridas/${corrida[1]}.json`
+  return `./datos${ruta.replace(/^\/api/, '')}.json`
+}
 
 async function pedir(ruta) {
-  const respuesta = await fetch(`${BASE}${ruta}`)
+  const destino = ESTATICO ? rutaEstatica(ruta) : `${BASE}${ruta}`
+  const respuesta = await fetch(destino)
   if (!respuesta.ok) {
     const detalle = await respuesta.json().catch(() => ({}))
     const error = new Error(detalle.detail || `La API respondió ${respuesta.status}`)
@@ -15,12 +39,16 @@ async function pedir(ruta) {
 }
 
 export const api = {
-  base: BASE,
+  base: ESTATICO ? 'exportación estática' : BASE,
+  estatico: ESTATICO,
   salud: () => pedir('/health'),
   modelos: () => pedir('/api/models'),
   ultimo: (modelId) => pedir(`/api/models/${encodeURIComponent(modelId)}/latest`),
   historico: (modelId) => pedir(`/api/models/${encodeURIComponent(modelId)}/runs`),
   corrida: (runId) => pedir(`/api/runs/${encodeURIComponent(runId)}`),
+  // Los artefactos binarios no se exportan: en modo estático no hay de dónde servirlos.
   urlArtefacto: (modelId, runId, nombre) =>
-    `${BASE}/api/models/${encodeURIComponent(modelId)}/runs/${encodeURIComponent(runId)}/artifacts/${encodeURIComponent(nombre)}`,
+    ESTATICO
+      ? null
+      : `${BASE}/api/models/${encodeURIComponent(modelId)}/runs/${encodeURIComponent(runId)}/artifacts/${encodeURIComponent(nombre)}`,
 }

@@ -50,10 +50,12 @@ make seed-demo            # sube un extracto SINTÉTICO (no requiere los datos r
 make trigger              # dispara la pipeline
 ```
 
-- Tablero → <http://localhost:5173>
-- API → <http://localhost:8000/docs>
-- Airflow → <http://localhost:8080>
-- MinIO → <http://localhost:9001>
+| Servicio | URL | Credenciales |
+|---|---|---|
+| Tablero | <http://localhost:5173> | — |
+| API | <http://localhost:8000/docs> | — |
+| Airflow | <http://localhost:8080> | `admin` / `AIRFLOW_ADMIN_PASSWORD` del `.env` |
+| MinIO | <http://localhost:9001> | `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` del `.env` |
 
 Con los datos reales de ACH, en vez de `seed-demo`:
 
@@ -80,6 +82,8 @@ make seed
 | `make test` | Tests unitarios y de contrato |
 | `make parity` | Tests de paridad contra los notebooks originales |
 | `make lint` | Estilo del código |
+| `make exportar` | Exporta los resultados como JSON estáticos |
+| `make demo-estatico` | Genera `dist-demo/`: tablero autocontenido para publicar |
 | `make clean` | Borra artefactos locales de Python |
 | `make reset` | Apaga y borra los volúmenes |
 
@@ -206,6 +210,13 @@ El `network_mode` del `DockerOperator` tiene que ser la red del compose
 (`ACH_DOCKER_NETWORK`, por defecto `ach_net`); con la red por defecto no se resuelven
 los nombres de servicio.
 
+**No sé la contraseña de Airflow.**
+Es `AIRFLOW_ADMIN_PASSWORD` del `.env` (por defecto `ach-demo-2026`), usuario `admin`.
+Ojo: el `AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: admin:admin` del compose es
+*usuario:rol*, no usuario:contraseña. `airflow-init` escribe la contraseña en
+`/opt/airflow/auth/passwords.json`; si se deja vacía la variable, Airflow genera una
+aleatoria que cambia en cada recreación.
+
 **El tablero muestra "No se pudo hablar con la API".**
 Comprueba `make ps` y <http://localhost:8000/health>. Si el backend responde pero el
 navegador no, revisa `ACH_CORS_ORIGINS`: debe incluir el origen del tablero.
@@ -227,8 +238,34 @@ Es la conversión de rutas de MSYS. El `Makefile` ya exporta `MSYS_NO_PATHCONV=1
 
 ---
 
+## Demo para cliente
+
+Para enseñar el tablero sin montar infraestructura:
+
+```bash
+make demo-estatico        # deja dist-demo/: HTML + JSON, sin backend ni credenciales
+npx serve dist-demo       # probarlo en local
+npx netlify deploy --dir=dist-demo --prod   # publicarlo
+```
+
+Los datos quedan congelados en el momento de la exportación y los artefactos binarios
+no se exportan. **Antes de publicar en una URL abierta:** lo que se exporta son métricas
+reales sobre datos ofuscados de ACH. Si la demo va a ser pública, exporta desde una
+corrida con `make seed-demo` (datos sintéticos).
+
+### Presentación
+
+```bash
+python scripts/diagrama_arquitectura.py    # PDF, SVG y PNG del diagrama
+python scripts/generar_diapositivas.py     # Docs/presentacion/avance.html
+```
+
+Las diapositivas leen las cifras de los resultados reales, así que se regeneran después
+de cada corrida y siguen siendo ciertas. Con Ctrl+P se exportan a PDF.
+
 ## Documentación
 
 - `Docs/Entendimiento_Negocio_y_Datos.md` — contexto de negocio y hallazgos del EDA
 - `Docs/CONTRATO_RESULTADOS.md` — esquema del JSON que consumen backend y tablero
 - `Docs/PARIDAD.md` — métricas de referencia y deltas del re-baseline
+- `Docs/presentacion/` — diapositivas del avance y diagrama de arquitectura

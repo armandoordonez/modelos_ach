@@ -10,7 +10,7 @@ DAG ?= pipeline_modelos
 export MSYS_NO_PATHCONV := 1
 
 .PHONY: help up up-app down restart reset ps logs build build-jobs \
-        seed seed-demo trigger dag test test-unit parity lint clean
+        seed seed-demo trigger dag exportar demo-estatico test test-unit parity lint clean
 
 help:  ## Muestra esta ayuda
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -90,6 +90,25 @@ trigger:  ## Dispara el DAG desde la consola
 	@echo "DAG disparado. Sigue el avance en http://localhost:$${AIRFLOW_PORT:-8080}"
 
 dag: trigger  ## Alias de trigger
+
+# --------------------------------------------------------------------------- #
+# Demo para cliente                                                            #
+# --------------------------------------------------------------------------- #
+exportar:  ## Exporta los resultados del bucket como JSON estáticos
+	ACH_S3_ENDPOINT=http://localhost:$${MINIO_API_PORT:-9000} \
+	ACH_S3_ACCESS_KEY=$${MINIO_ROOT_USER:-minioadmin} \
+	ACH_S3_SECRET_KEY=$${MINIO_ROOT_PASSWORD:-minioadmin} \
+	PYTHONPATH=jobs $(PYTHON) scripts/exportar_estatico.py
+
+demo-estatico: exportar  ## Genera dist-demo/: tablero autocontenido, listo para publicar
+	docker run --rm -v "$$(pwd)/frontend:/app" -w /app node:22-alpine \
+		sh -c "npm install --no-audit --no-fund --silent && npm run build"
+	rm -rf dist-demo && cp -r frontend/dist dist-demo
+	@git checkout -- frontend/public/config.js 2>/dev/null || true
+	@echo ""
+	@echo "  Listo: dist-demo/ — carpeta estática, sin backend ni credenciales."
+	@echo "  Probar:    npx serve dist-demo"
+	@echo "  Publicar:  npx netlify deploy --dir=dist-demo --prod"
 
 # --------------------------------------------------------------------------- #
 # Calidad                                                                      #

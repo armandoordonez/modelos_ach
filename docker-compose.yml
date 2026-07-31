@@ -26,8 +26,11 @@ x-airflow-comun: &airflow-comun
     # api-server. Con los componentes en contenedores distintos hay que apuntarla
     # por nombre de servicio: el valor por defecto (localhost) no la encuentra.
     AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-apiserver:8080/execution/
+    # "usuario:rol", no usuario:contraseña. La contraseña vive en el archivo de abajo,
+    # que airflow-init escribe a partir de AIRFLOW_ADMIN_PASSWORD para que sea estable
+    # entre reinicios; si se deja que Airflow la genere, cambia en cada recreación.
     AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: ${AIRFLOW_ADMIN_USER:-admin}:admin
-    AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE: /opt/airflow/simple_auth_manager_passwords.json
+    AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE: /opt/airflow/auth/passwords.json
     # --- Configuración que el DAG pasa a los contenedores de jobs ---
     ACH_JOBS_IMAGE: ${ACH_JOBS_IMAGE:-ach-jobs:latest}
     ACH_DOCKER_NETWORK: ${ACH_DOCKER_NETWORK:-ach_net}
@@ -48,6 +51,7 @@ x-airflow-comun: &airflow-comun
     - ./airflow/dags:/opt/airflow/dags:ro
     - ./jobs/models_config.yml:/opt/airflow/config/models_config.yml:ro
     - airflow-logs:/opt/airflow/logs
+    - airflow-auth:/opt/airflow/auth
     # El socket de Docker: es lo que le permite a Airflow lanzar los contenedores de jobs.
     - /var/run/docker.sock:/var/run/docker.sock
   # uid de airflow y gid 0: el socket de Docker pertenece al grupo root.
@@ -129,11 +133,15 @@ services:
       /bin/bash -c '
         airflow db migrate &&
         airflow pools set "$${ACH_POOL_MODELOS}" "$${ACH_POOL_SLOTS}" "Modelos en paralelo (limitado por memoria del host)" &&
-        echo "Airflow inicializado"
+        mkdir -p /opt/airflow/auth &&
+        printf "{\"%s\": \"%s\"}" "$${AIRFLOW_ADMIN_USER}" "$${AIRFLOW_ADMIN_PASSWORD}" > /opt/airflow/auth/passwords.json &&
+        echo "Airflow inicializado · usuario $${AIRFLOW_ADMIN_USER}"
       '
     environment:
       <<: *airflow-entorno
       ACH_POOL_SLOTS: ${ACH_POOL_SLOTS:-2}
+      AIRFLOW_ADMIN_USER: ${AIRFLOW_ADMIN_USER:-admin}
+      AIRFLOW_ADMIN_PASSWORD: ${AIRFLOW_ADMIN_PASSWORD:-ach-demo-2026}
     depends_on:
       postgres:
         condition: service_healthy
@@ -238,6 +246,7 @@ volumes:
   postgres-datos:
   minio-datos:
   airflow-logs:
+  airflow-auth:
 
 networks:
   default:

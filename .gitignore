@@ -47,3 +47,7 @@ desktop.ini
 
 # --- Almacen local de desarrollo ---
 .localstore/
+
+# --- Demo estatica (derivada, contiene metricas del cliente) ---
+frontend/public/datos/
+dist-demo/
