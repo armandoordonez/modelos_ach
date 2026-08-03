@@ -130,6 +130,19 @@ def test_el_json_es_serializable_y_omite_lo_vacio():
     assert json.loads(json.dumps(payload))["model_id"] == "caso05_pensionados"
 
 
+def test_los_campos_opcionales_de_dashboard_no_rompen_resultados_anteriores():
+    inicio = datetime.now(UTC)
+    resultado = construir_resultado(
+        model_id="caso04_propension_salud", model_name="Propensión", catalog_ref="#17", use_case=4,
+        task_type="classification", run_id="r", started_at=inicio, dataset=_dataset(),
+        metrics={"roc_auc": 0.71},
+    )
+    payload = resultado.to_json_dict()
+    assert "availability" not in payload
+    assert "category" not in payload
+    assert "placeholder" not in payload
+
+
 def test_indice_de_resultados_resume_la_corrida():
     indice = IndiceResultados(
         run_id="manual__2026-07-30T120000Z", total_models=2, successful=1, failed=1,

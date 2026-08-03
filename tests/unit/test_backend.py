@@ -162,6 +162,47 @@ def test_listar_corridas_conocidas(cliente):
 
 
 # --------------------------------------------------------------------------- #
+# Dashboard Caso 04                                                            #
+# --------------------------------------------------------------------------- #
+def test_dashboard_caso_04_agrega_modelos_placeholders_y_filtros(cliente):
+    cuerpo = cliente.get("/api/use-cases/4/dashboard").json()
+    assert cuerpo["use_case"] == 4
+    assert cuerpo["run_id"] == "run_2"
+    assert cuerpo["kpis"]["total_models"] == 5
+    assert cuerpo["kpis"]["available_models"] == 1
+    assert cuerpo["kpis"]["coming_soon_models"] == 2
+    assert cuerpo["kpis"]["models_without_results"] == 2
+
+    modelos = {modelo["model_id"]: modelo for modelo in cuerpo["models"]}
+    assert modelos["caso04_propension_salud"]["availability"] == "available"
+    assert modelos["caso04_share_of_wallet_observado"]["availability"] == "coming_soon"
+    assert modelos["caso04_propension_suscripciones_digitales"]["availability"] == "coming_soon"
+    assert modelos["caso04_rfm_consumidores"]["availability"] == "no_results"
+    assert modelos["caso04_propension_turismo"]["availability"] == "no_results"
+    assert modelos["caso04_share_of_wallet_observado"]["metrics"] == {}
+    assert modelos["caso04_propension_suscripciones_digitales"]["metrics"] == {}
+
+    filtros = cuerpo["filters"]
+    assert {m["model_id"] for m in filtros["models"]} == {
+        "caso04_rfm_consumidores",
+        "caso04_propension_salud",
+        "caso04_propension_turismo",
+        "caso04_share_of_wallet_observado",
+        "caso04_propension_suscripciones_digitales",
+    }
+    assert filtros["categories"]
+    assert filtros["runs"][0]["id"] == "run_2"
+
+
+def test_dashboard_caso_04_permite_pedir_una_corrida_concreta(cliente):
+    cuerpo = cliente.get("/api/use-cases/4/dashboard?run_id=run_1").json()
+    assert cuerpo["run_id"] == "run_1"
+    modelos = {modelo["model_id"]: modelo for modelo in cuerpo["models"]}
+    assert modelos["caso04_propension_salud"]["run_id"] == "run_1"
+    assert modelos["caso04_propension_turismo"]["availability"] == "no_results"
+
+
+# --------------------------------------------------------------------------- #
 # Artefactos y seguridad                                                       #
 # --------------------------------------------------------------------------- #
 def test_los_artefactos_se_sirven_por_el_backend(cliente):

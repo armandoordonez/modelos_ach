@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
@@ -115,6 +115,15 @@ def corrida(run_id: str) -> dict:
     if not datos["models"]:
         raise HTTPException(status_code=404, detail=f"La corrida '{run_id}' no tiene resultados.")
     return datos
+
+
+# --------------------------------------------------------------------------- #
+# Casos de uso                                                                 #
+# --------------------------------------------------------------------------- #
+@app.get("/api/use-cases/4/dashboard", tags=["casos-de-uso"])
+def dashboard_caso_04(run_id: str | None = Query(default=None)) -> dict:
+    """Vista agregada del caso de uso 04 para el dashboard interactivo."""
+    return servicio.dashboard_caso_04(run_id=run_id)
 
 
 # --------------------------------------------------------------------------- #

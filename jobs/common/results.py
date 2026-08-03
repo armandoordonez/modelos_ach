@@ -17,6 +17,7 @@ ESQUEMA_VERSION = "1.0"
 
 TaskType = Literal["clustering", "regression", "classification", "scoring"]
 Estado = Literal["success", "failed"]
+DisponibilidadDashboard = Literal["available", "coming_soon", "no_results"]
 
 
 def ahora_utc() -> datetime:
@@ -124,6 +125,15 @@ class ModelResult(BaseModel):
     artifacts: dict[str, str] = Field(default_factory=dict)
     notes: list[str] = Field(default_factory=list)
     error: str | None = None
+    category: str | None = Field(default=None, description="Categoría de negocio a la que aplica el resultado")
+    availability: DisponibilidadDashboard | None = Field(
+        default=None,
+        description="Estado opcional de disponibilidad para vistas agregadas del dashboard",
+    )
+    placeholder: bool = Field(
+        default=False,
+        description="Marca opcional para resultados simulados o placeholders de dashboard",
+    )
 
     @field_validator("metrics")
     @classmethod
@@ -142,7 +152,10 @@ class ModelResult(BaseModel):
         return limpias
 
     def to_json_dict(self) -> dict[str, Any]:
-        return self.model_dump(mode="json", exclude_none=True)
+        payload = self.model_dump(mode="json", exclude_none=True)
+        if payload.get("placeholder") is False:
+            payload.pop("placeholder", None)
+        return payload
 
 
 class EntradaIndice(BaseModel):

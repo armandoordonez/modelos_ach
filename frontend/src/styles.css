@@ -230,3 +230,147 @@ body {
   .metricas { grid-template-columns: repeat(2, 1fr); }
   .resumen { gap: 24px; }
 }
+
+/* --- Caso 04 ---------------------------------------------------------- */
+.caso04 { display: flex; flex-direction: column; gap: 18px; }
+
+.hero-caso {
+  display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(240px, 1fr); gap: 24px;
+  padding: 28px; border-radius: 18px; border: 1px solid var(--borde);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--azul) 16%, transparent), transparent 38%),
+    linear-gradient(135deg, var(--fondo-tarjeta), color-mix(in srgb, var(--fondo-sutil) 75%, white));
+  box-shadow: var(--sombra);
+}
+.eyebrow {
+  display: inline-block; margin-bottom: 10px; font-size: 11px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--azul);
+}
+.hero-caso h2 { margin: 0 0 8px; font-size: 28px; line-height: 1.1; }
+.hero-caso p { margin: 0; color: var(--texto-suave); max-width: 60ch; }
+
+.hero-caso__meta {
+  display: grid; gap: 14px; align-content: start; padding: 18px;
+  border-radius: 14px; background: color-mix(in srgb, var(--fondo-sutil) 65%, white);
+  border: 1px solid var(--borde-sutil);
+}
+.dato-meta { display: flex; flex-direction: column; gap: 4px; }
+.dato-meta span { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--texto-tenue); }
+.dato-meta strong { font-size: 15px; font-weight: 620; }
+
+.panel-filtros, .seccion-caso, .catalogo-caso {
+  background: var(--fondo-tarjeta); border: 1px solid var(--borde); border-radius: 16px;
+  padding: 22px; box-shadow: var(--sombra);
+}
+.panel-filtros__grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 18px;
+}
+.campo-filtro { display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: var(--texto-tenue); }
+.campo-filtro span { text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+.campo-filtro select {
+  border: 1px solid var(--borde); border-radius: 10px; padding: 11px 12px;
+  font: inherit; color: var(--texto); background: var(--fondo);
+}
+
+.panel-filtros__segmentos { display: flex; flex-direction: column; gap: 10px; }
+.panel-filtros__etiqueta {
+  font-size: 12px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; color: var(--texto-tenue);
+}
+.chips-filtro { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip-filtro {
+  border: 1px solid var(--borde); background: var(--fondo); color: var(--texto-suave);
+  border-radius: 999px; padding: 8px 13px; cursor: pointer; font: inherit; font-size: 13px;
+}
+.chip-filtro--activo {
+  border-color: var(--azul); background: color-mix(in srgb, var(--azul) 14%, transparent); color: var(--azul);
+}
+
+.resumen-caso {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px;
+}
+.indicador--panel {
+  padding: 18px; background: var(--fondo-tarjeta); border: 1px solid var(--borde);
+  border-radius: 14px; box-shadow: var(--sombra);
+}
+
+.catalogo-caso__encabezado {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.catalogo-caso__encabezado h3 { margin: 0; font-size: 17px; }
+.catalogo-caso__encabezado p { margin: 0; color: var(--texto-tenue); font-size: 13px; }
+.catalogo-caso__rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+
+.resumen-modelo {
+  border: 1px solid var(--borde); border-radius: 14px; padding: 14px; background: var(--fondo);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.resumen-modelo--activo { border-color: var(--azul); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--azul) 40%, transparent); }
+.resumen-modelo__boton {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+  border: none; background: none; padding: 0; text-align: left; color: inherit; cursor: pointer; font: inherit;
+}
+.enlace-accion {
+  border: none; background: none; padding: 0; color: var(--azul); cursor: pointer; font: inherit; font-size: 13px;
+}
+
+.seccion-caso__encabezado {
+  display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; margin-bottom: 18px; flex-wrap: wrap;
+}
+.seccion-caso__encabezado h3 { margin: 10px 0 0; font-size: 18px; }
+.seccion-caso__encabezado p { margin: 0; color: var(--texto-tenue); max-width: 42ch; }
+
+.paneles-modelo, .paneles-placeholder { display: grid; gap: 16px; }
+
+.panel-modelo, .panel-placeholder {
+  border: 1px solid var(--borde); border-radius: 14px; padding: 18px; background: var(--fondo);
+}
+.panel-modelo__encabezado {
+  display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 16px;
+}
+.panel-modelo__encabezado h4, .panel-placeholder h4 { margin: 8px 0 4px; font-size: 18px; }
+.panel-modelo__encabezado p, .panel-placeholder p { margin: 0; color: var(--texto-tenue); }
+.panel-modelo__marca, .panel-placeholder__cabecera {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+
+.estado-modelo {
+  display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 9px;
+  font-size: 11px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase;
+}
+.estado-modelo--disponible {
+  background: color-mix(in srgb, var(--verde) 16%, transparent); color: var(--verde);
+}
+.estado-modelo--pendiente {
+  background: color-mix(in srgb, var(--naranja) 18%, transparent); color: #986200;
+}
+.estado-modelo--sin-datos {
+  background: color-mix(in srgb, var(--texto-tenue) 18%, transparent); color: var(--texto-suave);
+}
+
+.bloques-dashboard {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-top: 18px;
+}
+.bloque-dashboard {
+  border: 1px solid var(--borde-sutil); border-radius: 12px; padding: 16px; background: var(--fondo-tarjeta);
+}
+.bloque-dashboard__encabezado { margin-bottom: 10px; }
+.bloque-dashboard__encabezado h5 { margin: 0; font-size: 14px; }
+
+.panel-placeholder--pendiente {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--naranja) 10%, white), var(--fondo));
+}
+.panel-placeholder--sin-datos {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--texto-tenue) 12%, white), var(--fondo));
+}
+
+.estado-embebido {
+  padding: 18px; border: 1px dashed var(--borde); border-radius: 12px;
+  color: var(--texto-tenue); background: var(--fondo);
+}
+
+@media (max-width: 920px) {
+  .hero-caso { grid-template-columns: 1fr; }
+  .bloques-dashboard { grid-template-columns: 1fr; }
+}

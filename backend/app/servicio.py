@@ -8,6 +8,9 @@ rutas ni formatos: los toma del contrato de ``common/results.py``.
 from __future__ import annotations
 
 import logging
+from functools import lru_cache
+import json
+from pathlib import Path
 from typing import Any
 
 from common.registry import cargar_registro
@@ -20,6 +23,8 @@ log = logging.getLogger(__name__)
 
 ARCHIVO_INDICE = "index.json"
 ARCHIVO_ULTIMO = "latest.json"
+USE_CASE_4 = 4
+FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 
 
 class ErrorDeAlmacenamiento(RuntimeError):
@@ -44,6 +49,189 @@ def _leer_json(ruta: str) -> Any | None:
     except Exception as error:  # noqa: BLE001
         log.warning("No se pudo leer %s: %s", ruta, error)
         return None
+
+
+@lru_cache(maxsize=1)
+def _placeholders_caso_04() -> list[dict[str, Any]]:
+    ruta = FIXTURES_DIR / "use_case_4_placeholders.json"
+    try:
+        return json.loads(ruta.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        log.warning("No existe %s; el dashboard de caso 04 no tendrá placeholders.", ruta)
+        return []
+
+
+def _catalogo_numero(referencia: str) -> int:
+    digitos = "".join(c for c in str(referencia) if c.isdigit())
+    return int(digitos) if digitos else 9999
+
+
+def _categoria_de(datos: dict[str, Any]) -> str | None:
+    if datos.get("category"):
+        return str(datos["category"])
+    params = datos.get("params") or {}
+    for clave in ("categoria_objetivo", "categoria"):
+        valor = params.get(clave)
+        if valor:
+            return str(valor)
+    return None
+
+
+def _periodo_de(datos: dict[str, Any]) -> dict[str, Any] | None:
+    ventana = (datos.get("dataset") or {}).get("window")
+    if not ventana or len(ventana) != 2:
+        return None
+    inicio, fin = ventana
+    return {"id": f"{inicio}:{fin}", "label": f"{inicio} → {fin}", "window": [inicio, fin]}
+
+
+def _segmentos_de(datos: dict[str, Any]) -> list[str]:
+    segmentos = datos.get("segments") or []
+    return [str(segmento.get("label")) for segmento in segmentos if segmento.get("label")]
+
+
+def _resumen_sin_resultados(modelo) -> dict[str, Any]:
+    return {
+        "model_id": modelo.id,
+        "model_name": modelo.nombre,
+        "catalog_ref": modelo.catalogo,
+        "use_case": modelo.caso_uso,
+        "task_type": modelo.task_type,
+        "status": None,
+        "run_id": None,
+        "finished_at": None,
+        "duration_seconds": None,
+        "dataset": {},
+        "params": modelo.params,
+        "metrics": {},
+        "segments": [],
+        "charts": {},
+        "artifacts": {},
+        "notes": ["El modelo está registrado pero todavía no tiene resultados publicados."],
+        "availability": "no_results",
+        "placeholder": False,
+        "category": _categoria_de({"params": modelo.params}),
+    }
+
+
+def _modelo_dashboard(datos: dict[str, Any]) -> dict[str, Any]:
+    copia = dict(datos)
+    copia.setdefault("metrics", {})
+    copia.setdefault("charts", {})
+    copia.setdefault("segments", [])
+    copia.setdefault("params", {})
+    copia.setdefault("dataset", {})
+    copia.setdefault("artifacts", {})
+    copia.setdefault("notes", [])
+    copia["availability"] = copia.get("availability") or "available"
+    copia["placeholder"] = bool(copia.get("placeholder", False))
+    copia["category"] = _categoria_de(copia)
+    copia["period"] = _periodo_de(copia)
+    copia["available_segments"] = _segmentos_de(copia)
+    return copia
+
+
+def _corridas_caso(caso_uso: int) -> list[str]:
+    corridas: set[str] = set()
+    for modelo in cargar_registro().modelos:
+        if modelo.caso_uso != caso_uso:
+            continue
+        for ruta in _storage().listar(_ruta(modelo.id), sufijo=".json"):
+            run_id = _run_id_desde_ruta(ruta)
+            if run_id != "latest":
+                corridas.add(run_id)
+    return sorted(corridas, reverse=True)
+
+
+def _filtros_dashboard(modelos: list[dict[str, Any]], corridas: list[str]) -> dict[str, Any]:
+    periodos: dict[str, dict[str, Any]] = {}
+    categorias: dict[str, str] = {}
+    segmentos: dict[str, str] = {}
+    opciones_modelo = []
+
+    for modelo in modelos:
+        opciones_modelo.append({
+            "model_id": modelo["model_id"],
+            "model_name": modelo["model_name"],
+            "catalog_ref": modelo.get("catalog_ref", ""),
+            "task_type": modelo.get("task_type"),
+            "availability": modelo.get("availability"),
+        })
+        periodo = modelo.get("period")
+        if periodo:
+            periodos[periodo["id"]] = periodo
+        categoria = modelo.get("category")
+        if categoria:
+            categorias[categoria] = categoria
+        for segmento in modelo.get("available_segments", []):
+            segmentos[segmento] = segmento
+
+    return {
+        "runs": [{"id": run_id, "label": run_id} for run_id in corridas],
+        "periods": list(periodos.values()),
+        "models": sorted(opciones_modelo, key=lambda item: _catalogo_numero(item["catalog_ref"])),
+        "segments": [{"id": valor, "label": valor} for valor in sorted(segmentos.values())],
+        "categories": [{"id": valor, "label": valor} for valor in sorted(categorias.values())],
+    }
+
+
+def dashboard_caso_04(run_id: str | None = None) -> dict[str, Any]:
+    """Vista agregada del caso de uso 04 para el dashboard interactivo."""
+
+    cache_key = f"usecase4:{run_id or 'latest'}"
+
+    def calcular() -> dict[str, Any]:
+        registro = [m for m in cargar_registro().modelos if m.caso_uso == USE_CASE_4]
+        corridas = _corridas_caso(USE_CASE_4)
+        corrida_activa = run_id or (corridas[0] if corridas else None)
+
+        modelos: list[dict[str, Any]] = []
+        for modelo in registro:
+            datos = (
+                resultado_de_corrida(modelo.id, corrida_activa)
+                if corrida_activa
+                else resultado_mas_reciente(modelo.id)
+            )
+            if datos is None and run_id is None:
+                datos = resultado_mas_reciente(modelo.id)
+            if datos is None:
+                modelos.append(_modelo_dashboard(_resumen_sin_resultados(modelo)))
+                continue
+            modelos.append(_modelo_dashboard(datos))
+
+        modelos.extend(_modelo_dashboard(placeholder) for placeholder in _placeholders_caso_04())
+        modelos.sort(key=lambda item: _catalogo_numero(item.get("catalog_ref", "")))
+
+        disponibles = [m for m in modelos if m.get("availability") == "available"]
+        kpis = {
+            "total_models": len(modelos),
+            "available_models": len(disponibles),
+            "coming_soon_models": sum(1 for m in modelos if m.get("availability") == "coming_soon"),
+            "models_without_results": sum(1 for m in modelos if m.get("availability") == "no_results"),
+            "successful_models": sum(1 for m in disponibles if m.get("status") == "success"),
+            "failed_models": sum(1 for m in disponibles if m.get("status") == "failed"),
+            "entities_total": int(sum(float((m.get("metrics") or {}).get("n_entities", 0)) for m in disponibles)),
+        }
+        origen = "run" if corrida_activa else "latest"
+        latest_run = corridas[0] if corridas else None
+        generado = next((m.get("finished_at") for m in disponibles if m.get("finished_at")), None)
+        return {
+            "use_case": USE_CASE_4,
+            "title": "Comportamientos de consumo",
+            "description": (
+                "Vista agregada para segmentación, share of wallet y propensiones del "
+                "caso de uso 04."
+            ),
+            "run_id": corrida_activa,
+            "latest_run_id": latest_run,
+            "generated_at": generado,
+            "origen": origen,
+            "kpis": kpis,
+            "filters": _filtros_dashboard(modelos, corridas),
+            "models": modelos,
+        }
+
+    return get_cache().resolver(cache_key, calcular)
 
 
 # --------------------------------------------------------------------------- #

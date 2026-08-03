@@ -1,0 +1,32 @@
+[
+  {
+    "model_id": "caso04_share_of_wallet_observado",
+    "model_name": "Share of wallet observado",
+    "catalog_ref": "#16",
+    "use_case": 4,
+    "task_type": "regression",
+    "availability": "coming_soon",
+    "placeholder": true,
+    "status": null,
+    "category": "Consumo total",
+    "notes": [
+      "Modelo pendiente de integración con el pipeline analítico.",
+      "El dashboard lo muestra como placeholder sin métricas ni gráficos inventados."
+    ]
+  },
+  {
+    "model_id": "caso04_propension_suscripciones_digitales",
+    "model_name": "Propensión a suscripciones digitales",
+    "catalog_ref": "#57",
+    "use_case": 4,
+    "task_type": "classification",
+    "availability": "coming_soon",
+    "placeholder": true,
+    "status": null,
+    "category": "Suscripciones digitales",
+    "notes": [
+      "Modelo pendiente de integración con el pipeline analítico.",
+      "El dashboard lo muestra como placeholder sin métricas ni gráficos inventados."
+    ]
+  }
+]

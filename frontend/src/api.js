@@ -12,18 +12,27 @@ const ESTATICO = CONFIG.modo === 'estatico'
 
 /** En modo estático cada ruta de la API tiene su archivo exportado. */
 function rutaEstatica(ruta) {
-  const modelo = ruta.match(/^\/api\/models\/([^/]+)\/(latest|runs)$/)
+  const [camino, busqueda = ''] = ruta.split('?')
+  const query = new URLSearchParams(busqueda)
+
+  if (camino === '/api/use-cases/4/dashboard') {
+    const runId = query.get('run_id')
+    return runId
+      ? `./datos/casos-uso/4/dashboard-${runId}.json`
+      : './datos/casos-uso/4/dashboard.json'
+  }
+  const modelo = camino.match(/^\/api\/models\/([^/]+)\/(latest|runs)$/)
   if (modelo) {
     const [, id, recurso] = modelo
     return recurso === 'latest'
       ? `./datos/modelos/${id}.json`
       : `./datos/modelos/${id}-runs.json`
   }
-  if (ruta === '/api/models') return './datos/models.json'
-  if (ruta === '/health') return './datos/health.json'
-  const corrida = ruta.match(/^\/api\/runs\/(.+)$/)
+  if (camino === '/api/models') return './datos/models.json'
+  if (camino === '/health') return './datos/health.json'
+  const corrida = camino.match(/^\/api\/runs\/(.+)$/)
   if (corrida) return `./datos/corridas/${corrida[1]}.json`
-  return `./datos${ruta.replace(/^\/api/, '')}.json`
+  return `./datos${camino.replace(/^\/api/, '')}.json`
 }
 
 async function pedir(ruta) {
@@ -43,6 +52,8 @@ export const api = {
   estatico: ESTATICO,
   salud: () => pedir('/health'),
   modelos: () => pedir('/api/models'),
+  dashboardCaso04: (runId) =>
+    pedir(runId ? `/api/use-cases/4/dashboard?run_id=${encodeURIComponent(runId)}` : '/api/use-cases/4/dashboard'),
   ultimo: (modelId) => pedir(`/api/models/${encodeURIComponent(modelId)}/latest`),
   historico: (modelId) => pedir(`/api/models/${encodeURIComponent(modelId)}/runs`),
   corrida: (runId) => pedir(`/api/runs/${encodeURIComponent(runId)}`),

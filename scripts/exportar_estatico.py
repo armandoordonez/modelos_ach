@@ -33,11 +33,14 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[1]
 if str(RAIZ / "jobs") not in sys.path:
     sys.path.insert(0, str(RAIZ / "jobs"))
+if str(RAIZ / "backend") not in sys.path:
+    sys.path.insert(0, str(RAIZ / "backend"))
 
 from common.config import get_settings  # noqa: E402
 from common.logging_config import configurar_logging  # noqa: E402
 from common.registry import cargar_registro  # noqa: E402
 from common.storage import get_storage  # noqa: E402
+from app import servicio  # noqa: E402
 
 log = logging.getLogger(__name__)
 
@@ -102,6 +105,17 @@ def exportar(destino: Path = DESTINO_POR_DEFECTO) -> dict:
         historico.sort(key=lambda c: c.get("finished_at") or "", reverse=True)
         _escribir(destino / "modelos" / f"{modelo.id}-runs.json",
                   {"model_id": modelo.id, "total": len(historico), "runs": historico})
+
+    dashboard = servicio.dashboard_caso_04()
+    _escribir(destino / "casos-uso" / "4" / "dashboard.json", dashboard)
+    for corrida in dashboard.get("filters", {}).get("runs", []):
+        run_id = corrida.get("id")
+        if not run_id:
+            continue
+        _escribir(
+            destino / "casos-uso" / "4" / f"dashboard-{run_id}.json",
+            servicio.dashboard_caso_04(run_id=run_id),
+        )
 
     config = RAIZ / "frontend" / "public" / "config.js"
     config.write_text(
